@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backblaze B2 Folder Upload</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.1420.0/aws-sdk.min.js"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(33,147,176,0.15);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      color: #2193b0;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+    }
+    .upload-box {
+      margin-bottom: 1.5rem;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    label[for="file-input"] {
+      display: inline-block;
+      background: #2193b0;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s;
+      margin-bottom: 1rem;
+    }
+    label[for="file-input"]:hover {
+      background: #6dd5ed;
+      color: #2193b0;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #2193b0;
+    }
+    .progress {
+      width: 100%;
+      background: #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      height: 18px;
+      display: none;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .status {
+      font-size: 1rem;
+      margin-top: 1rem;
+      min-height: 24px;
+    }
+    button {
+      background: #6dd5ed;
+      color: #2193b0;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    button:disabled {
+      background: #ccc;
+      color: #888;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload to Backblaze B2</h1>
+    <form id="b2-upload-form" class="upload-box">
+      <label for="folder-select" style="font-weight:700;margin-bottom:0.5rem;display:block;">Select Folder:</label>
+      <select id="folder-select">
+        <option value="books">Books</option>
+        <option value="journals">Journals</option>
+        <option value="projects">Student Projects</option>
+        <option value="internal-videos">Internal Videos</option>
+        <option value="external-videos">External Videos</option>
+        <option value="thesis">Thesis</option>
+        <option value="research">Research</option>
+        <option value="community">Community</option>
+      </select>
+      <label for="file-input">Choose File:</label>
+      <input type="file" id="file-input" />
+      <label for="metadata-input" style="font-weight:700;margin-bottom:0.5rem;display:block;">Metadata (key:value, comma separated):</label>
+      <input type="text" id="metadata-input" placeholder="author:John Doe, year:2025" />
+      <div class="progress" id="progress">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <button type="submit" id="upload-btn" disabled>Upload</button>
+    </form>
+    <div class="status" id="status"></div>
+  </div>
+  <script>
+    // Backblaze B2 S3-Compatible Configuration
+    const CONFIG = {
+      accessKeyId: '0057c63aeb3c6120000000005',
+      secretAccessKey: 'K005GW/h8vqZk1L0QGZL+zy58ltyq3c',
+      region: 'us-east-005',
+      bucketName: 'silverlink',
+      endpoint: 'https://s3.us-east-005.backblazeb2.com',
+      folderPaths: {
+        books: 'ebooks/',
+        journals: 'journals/',
+        projects: 'student_projects/',
+        'internal-videos': 'internal_lectures/',
+        'external-videos': 'external_lectures/',
+        thesis: 'research/thesis/',
+        research: 'research/',
+        community: 'community/'
+      }
+    };
+
+    AWS.config.update({
+      region: CONFIG.region,
+      credentials: new AWS.Credentials(CONFIG.accessKeyId, CONFIG.secretAccessKey)
+    });
+
+    const s3 = new AWS.S3({
+      endpoint: CONFIG.endpoint,
+      s3ForcePathStyle: true
+    });
+
+    const folderSelect = document.getElementById('folder-select');
+    const fileInput = document.getElementById('file-input');
+    const metadataInput = document.getElementById('metadata-input');
+    const uploadBtn = document.getElementById('upload-btn');
+    const statusDiv = document.getElementById('status');
+    const progress = document.getElementById('progress');
+    const progressBar = document.getElementById('progress-bar');
+
+    fileInput.addEventListener('change', () => {
+      uploadBtn.disabled = !fileInput.files.length;
+      statusDiv.textContent = '';
+      progress.style.display = 'none';
+      progressBar.style.width = '0%';
+    });
+
+    document.getElementById('b2-upload-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return;
+      uploadBtn.disabled = true;
+      statusDiv.textContent = '';
+      progress.style.display = 'block';
+      progressBar.style.width = '0%';
+
+      // Get selected folder
+      const folderKey = folderSelect.value;
+      const folderPath = CONFIG.folderPaths[folderKey];
+      const key = folderPath + file.name;
+
+      // Parse metadata input
+      const metaRaw = metadataInput.value.trim();
+      let metadata = {};
+      if (metaRaw) {
+        metaRaw.split(',').forEach(pair => {
+          const [k, v] = pair.split(':').map(s => s.trim());
+          if (k && v) metadata[k] = v;
+        });
+      }
+
+      // Upload to Backblaze B2
+      s3.upload({
+        Bucket: CONFIG.bucketName,
+        Key: key,
+        Body: file,
+        ACL: 'public-read',
+        Metadata: metadata
+      }).on('httpUploadProgress', function(evt) {
+        if (evt.total) {
+          const percent = Math.round((evt.loaded / evt.total) * 100);
+          progressBar.style.width = percent + '%';
+        }
+      }).send(function(err, data) {
+        uploadBtn.disabled = false;
+        if (err) {
+          statusDiv.textContent = 'Upload failed: ' + err.message;
+          statusDiv.style.color = '#d32f2f';
+          progress.style.display = 'none';
+        } else {
+          statusDiv.textContent = 'Upload successful! File URL: ' + data.Location;
+          statusDiv.style.color = '#388e3c';
+          progressBar.style.width = '100%';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

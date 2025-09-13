@@ -1,0 +1,4756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-Frame-Options" content="DENY">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sa'adatu Rimi College E-Library - Repository</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <!-- PDF.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js"></script>
+  <!-- AWS SDK -->
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1040.0.min.js"></script>
+
+  <style>
+    :root {
+      --primary-green: #2E7D32; 
+      --secondary-green: #1B5E20;
+      --accent-gold: #FFD700;
+      --light-gray: #f8f9fa;
+      --white: #fff;
+      --dark: #212121;
+      --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+      --border-radius: 8px;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-top: 170px; /* Added padding to prevent content from hiding behind sticky header */
+    }
+
+    /* Sticky Header Wrapper */
+    .sticky-header-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+    }
+
+    .header-container {
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+      color: white;
+      padding: 15px 0;
+      box-shadow: var(--box-shadow);
+      width: 100%;
+    }
+    .header-content {
+      max-width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .college-logo {
+      height: 70px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+    .logo-text h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+    .logo-text p {
+      font-size: 0.95rem;
+      color: var(--accent-gold);
+      font-weight: 500;
+    }
+    .datetime {
+      font-size: 0.9rem;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Navigation Styling */
+    .nav-container {
+      background: var(--secondary-green);
+      padding: 0.3rem 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+    .main-nav {
+      max-width: 100%;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .nav-container .nav-link {
+      text-decoration: none;
+      color: #ffffff;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: inherit;
+      font-family: inherit;
+      display: inline-block;
+      padding: 0.5rem 0.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border-radius: var(--border-radius);
+    }
+
+    /* Hover effect */
+    .nav-container .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Active link styling */
+    .nav-container .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.2);
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 1rem 2rem;
+      width: 100%;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      width: 100%;
+      max-width: 100%;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      padding-left: 3rem;
+    }
+    .search-bar::before {
+      content: '\f002';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+    }
+    .search-bar input:focus {
+      outline: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Section Title */
+    .repository-section {
+      display: none;
+    }
+
+    .repository-section.active {
+      display: block;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--primary-green);
+      margin-bottom: 0.5rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--accent-gold);
+    }
+
+    /* Resource Grid */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+
+    .thumbnail {
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      cursor: pointer;
+      aspect-ratio: 2 / 3;
+      position: relative;
+      flex: 1;
+    }
+    .thumbnail:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .thumbnail-cover {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+    }
+
+    .cover-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+      z-index: 2;
+    }
+
+    .cover-content {
+      position: relative;
+      z-index: 3;
+      padding: 1rem;
+      text-align: center;
+      color: white;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .project-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .cover-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      line-height: 1.2;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .cover-by,
+    .cover-supervised {
+      font-size: 0.7rem;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .cover-author,
+    .cover-id,
+    .cover-supervisor {
+      font-size: 0.8rem;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* PDF Thumbnail Styles */
+    .pdf-thumbnail {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f5f5f5;
+      position: relative;
+    }
+
+    .pdf-thumbnail canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .pdf-icon-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .pdf-icon-overlay i {
+      font-size: 2rem;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .thumbnail:hover .pdf-icon-overlay {
+      opacity: 1;
+    }
+
+    /* Video Thumbnail */
+    .video-thumbnail {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .video-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .play-button i {
+      color: var(--primary-green);
+      font-size: 24px;
+      margin-left: 5px;
+    }
+
+    .play-button:hover {
+      background: rgba(255, 215, 0, 0.9);
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      width: 60%;
+      max-width: 800px;
+      padding: 1.5rem;
+      position: relative;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--dark);
+      cursor: pointer;
+      transition: var(--transition);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .modal-close:hover {
+      color: white;
+      background-color: var(--primary-green);
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+
+    .modal-left {
+      flex: 1;
+    }
+
+    .modal-right {
+      flex: 1.2;
+    }
+
+    .modal-cover-container {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .modal-cover {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .modal-video-container {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .modal-video {
+      width: 100%;
+      height: 100%;
+    }
+
+    .modal-metadata {
+      background: #f9f9f9;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--secondary-green);
+      line-height: 1.3;
+    }
+
+    .modal-abstract {
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      line-height: 1.6;
+      padding: 1.5rem;
+      background: #f9f9f9;
+      border-radius: var(--border-radius);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+    }
+
+    .modal-btn {
+      background: var(--primary-green);
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .modal-btn:hover {
+      background: var(--secondary-green);
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .footer-container {
+      background: linear-gradient(to right, var(--primary-green), var(--secondary-green));
+      color: white;
+      padding: 3rem 2rem;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      max-width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .footer-section h4 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    .footer-section h4::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--accent-gold);
+    }
+
+    .footer-section p,
+    .footer-section a {
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 0.75rem;
+      display: block;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-section a:hover {
+      color: var(--white);
+      transform: translateX(5px);
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .social-icons a {
+      color: white;
+      font-size: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+      color: var(--accent-gold);
+      transform: translateY(-3px);
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+/* ========== AI TOOLS SECTION ========== */
+.ai-tools-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.ai-tool-card {
+  flex: 1 1 calc(50% - 1rem); /* Two per row */
+  background: linear-gradient(135deg, #ddee7d, #adc1ee);
+  min-width: 250px;
+  max-width: 300px;
+  box-sizing: border-box;
+}
+
+.ai-tool-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.ai-header {
+  background: linear-gradient(135deg, #0D47A1, #1976D2);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.ai-header.yajib {
+  background: linear-gradient(135deg, #2E7D32, #4CAF50);
+}
+
+.ai-header.nastech {
+  background: linear-gradient(135deg, #B71C1C, #F44336);
+}
+
+.ai-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.ai-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.ai-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.ai-body {
+  padding: 1.5rem;
+  color: var(--dark);
+}
+
+.ai-description {
+  margin-bottom: 1.5rem;
+  line-height: 2.6;
+}
+
+.ai-button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background: #2196F3;
+  color: white;
+  text-align: center;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 0;
+  transition: var(--transition);
+  border: none;
+  cursor: pointer;
+}
+
+.ai-button:hover {
+  background: #1976D2;
+  transform: translateY(-2px);
+}
+
+.ai-button.yajib {
+  background: #04552f;
+}
+
+.ai-button.yajib:hover {
+  background: #2E7D32;
+}
+
+.ai-button.nastech {
+  background: #F44336;
+}
+
+.ai-button.nastech:hover {
+  background: #D32F2F;
+}
+@media (max-width: 768px) {
+  .ai-tool-card {
+    flex: 1 1 100%; /* One card per row on small screens */
+  }
+}
+    /* Loading Spinner */
+    .loading-container {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(46, 125, 50, 0.1);
+      border-top: 5px solid var(--primary-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .modal-body {
+        flex-direction: column;
+      }
+      .modal-left {
+        min-width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 180px; /* More padding on mobile for header height */
+      }
+      
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      .datetime {
+        text-align: center;
+      }
+      .main-nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 0.5rem;
+      }
+      .modal-content {
+        padding: 1rem;
+      }
+    }
+  </style>
+  <style>
+  /* ======= STUDENT PROJECTS SECTION STYLES ======= */
+  .project-form-container {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 3rem;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  
+  .form-header {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    color: white;
+    padding: 1.5rem 2rem;
+  }
+  
+  .form-header h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  
+  .form-header p {
+    opacity: 0.9;
+    font-size: 0.95rem;
+  }
+  
+  .project-submission-form {
+    padding: 2rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+  }
+  
+  .form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  
+  .file-upload {
+    margin-top: 2rem;
+  }
+  
+  .upload-area {
+    border: 2px dashed #ddd;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 0.5rem;
+  }
+  
+  .upload-area:hover {
+    border-color: var(--primary-green);
+    background: rgba(46, 125, 50, 0.05);
+  }
+  
+  .upload-area i {
+    font-size: 2.5rem;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+  }
+  
+  .upload-area p {
+    color: #666;
+    margin-bottom: 0;
+  }
+  
+  .upload-area input[type="file"] {
+    display: none;
+  }
+  
+  .file-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+  
+  .form-footer {
+    margin-top: 2rem;
+    text-align: right;
+  }
+  
+  .submit-btn {
+    background: var(--primary-green);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .submit-btn:hover {
+    background: var(--secondary-green);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  /* Academic Resources */
+  .academic-resources {
+    margin-top: 4rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  
+  .resources-title {
+    font-size: 1.5rem;
+    color: var(--primary-green);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  
+  .resources-grid {
+    display: grid;
+    gap: 2rem;
+  }
+  
+  .resource-category h4 {
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eee;
+  }
+  
+  .resource-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .resource-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: var(--transition);
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #eee;
+  }
+  
+  .resource-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    border-color: var(--primary-green);
+  }
+  
+  .resource-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  
+  .resource-info h5 {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    color: #222;
+  }
+  
+  .resource-info p {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .resource-cards {
+      grid-template-columns: 1fr;
+    }
+    
+    .project-submission-form {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .form-header {
+      padding: 1.2rem;
+    }
+    
+    .project-submission-form {
+      padding: 1rem;
+    }
+    
+    .upload-area {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<style>
+  /* Journal Section Specific Styles */
+  .resource-category {
+    margin-bottom: 2.5rem;
+    grid-column: 1 / -1;
+  }
+  
+  .category-title {
+    font-size: 1.2rem;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent-gold);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  
+  .journal-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .journal-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  
+  .journal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  
+  .journal-logo {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    background: var(--primary-green);
+  }
+  
+  .journal-info {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .journal-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: var(--dark);
+  }
+  
+  .journal-info p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    flex: 1;
+  }
+  
+  .journal-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-green);
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition);
+    font-size: 0.9rem;
+  }
+  
+  .journal-link:hover {
+    color: var(--secondary-green);
+    transform: translateX(5px);
+  }
+  
+  @media (max-width: 768px) {
+    .journal-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  
+</style>
+
+<!-- Add this CSS to the existing styles -->
+<style>
+  /* ======= TOP YOUTUBE CHANNELS SECTION ======= */
+  .channels-container {
+    margin-top: 2rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    background: white;
+  }
+  
+  .category-accordion {
+    border-bottom: 1px solid #eee;
+  }
+  
+  .accordion-header {
+    width: 100%;
+    padding: 1.2rem 1.5rem;
+    background: rgba(92, 53, 3, 0.938);
+    color: white;
+    text-align: left;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .accordion-header:hover {
+    background: var(--secondary-green);
+  }
+  
+  .accordion-header i {
+    margin-right: 0.8rem;
+    font-size: 1.2rem;
+  }
+  
+  .toggle-icon {
+    transition: var(--transition);
+  }
+  
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #f9f9f9;
+  }
+  
+  .accordion-content.active {
+    max-height: 1000px;
+  }
+  
+  .channel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .channel-card {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: var(--transition);
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #eee;
+  }
+  
+  .channel-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    border-color: burlywood;
+  }
+  
+  .channel-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-right: 1rem;
+  }
+  
+  .channel-info h3 {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    color: #222;
+  }
+  
+  .channel-info p {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .channel-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .accordion-header {
+      padding: 1rem;
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<style>
+
+/* Keep existing styles above unchanged until reaching .resource-icon */
+
+.resource-icon {
+  height: 60px; /* Reduced from 120px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.8rem; /* Reduced icon size */
+  border-radius: var(--border-radius);
+  /* Each category gets a different color via class override in HTML */
+}
+
+/* Example color classes you can apply to .resource-icon in HTML */
+.resource-icon.color1 { background-color: #FF6F61; } /* Coral */
+.resource-icon.color2 { background-color: #6B5B95; } /* Purple */
+.resource-icon.color3 { background-color: #88B794; } /* Green */
+.resource-icon.color4 { background-color: #355C7D; } /* Navy Blue */
+.resource-icon.color5 { background-color: #F7CAC9; } /* Pink */
+.resource-icon.color6 { background-color: #92C7CF; } /* Light Blue */
+.resource-icon.color7 { background-color: #FAC748; } /* Yellow/Gold */
+.resource-icon.color8 { background-color: #4A6FA6; } /* Steel Blue */
+
+/* Reduce the size of the entire resource card to ~50% of original */
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjusted width */
+  gap: 1rem; /* Reduced gap */
+  padding: 1rem;
+}
+
+.resource-card {
+  background: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  transition: var(--transition);
+  border: 1px solid #eee;
+  height: auto; /* Auto height for compact cards */
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  border-color: var(--primary-green);
+}
+
+.resource-content {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-title {
+  font-size: 1rem; /* Smaller title */
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--dark);
+}
+
+.resource-description {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.8rem;
+  flex: 1;
+  line-height: 1.5;
+}
+
+.resource-feature {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.resource-feature i {
+  color: var(--primary-green);
+  margin-right: 0.4rem;
+}
+
+.resource-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: var(--primary-green);
+  color: white;
+  text-decoration: none;
+  padding: 0.6rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  transition: var(--transition);
+  margin-top: auto;
+  font-size: 0.85rem;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.resource-link:hover {
+  background: var(--secondary-green);
+  transform: translateY(-2px);
+}
+</style>
+  <style>
+    :root {
+      --primary-green: #2E7D32;
+      --secondary-green: #1B5E20;
+      --accent-gold: #FFD700;
+      --light-gray: #f8f9fa;
+      --white: #fff;
+      --dark: #212121;
+      --box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+      --border-radius: 8px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+      color: var(--dark);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .header-container {
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+      color: white;
+      padding: 15px 0;
+      box-shadow: var(--box-shadow);
+      border-radius: var(--border-radius);
+      margin-bottom: 20px;
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .college-logo {
+      height: 70px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+    
+    .logo-text h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+    
+    .logo-text p {
+      font-size: 0.95rem;
+      color: var(--accent-gold);
+      font-weight: 500;
+    }
+    
+    .section-title {
+      font-size: 1.8rem;
+      color: var(--primary-green);
+      margin: 1.5rem 0;
+      position: relative;
+      padding-bottom: 0.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--accent-gold);
+      border-radius: 2px;
+    }
+    
+    .intro-text {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      color: #555;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+    
+    .features-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .feature {
+      display: flex;
+      align-items: center;
+      background: white;
+      padding: 15px 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      min-width: 90px;
+    }
+    
+    .feature i {
+      font-size: 1.5rem;
+      color: var(--primary-green);
+      margin-right: 15px;
+    }
+    
+    .feature span {
+      font-weight: 500;
+    }
+    
+    .category-container {
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+    }
+    
+    .category-accordion {
+      margin-bottom: 1rem;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+    }
+    
+    .accordion-header {
+      width: 100%;
+      padding: 1.2rem 1.5rem;
+      background: var(--primary-green);
+      color: white;
+      text-align: left;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .accordion-header:hover {
+      background: var(--secondary-green);
+    }
+    
+    .accordion-header i {
+      margin-right: 0.8rem;
+    }
+    
+    .toggle-icon {
+      transition: var(--transition);
+    }
+    
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: #f9f9f9;
+    }
+    
+    .accordion-content.active {
+      max-height: 1000px;
+    }
+    
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem;
+    }
+    
+    .resource-card {
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      transition: var(--transition);
+      border: 1px solid #eee;
+      height: 95%;
+      display: flex;
+      flex-direction: column;
+      width: 77%;
+    }
+    
+    .resource-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      border-color: var(--primary-green);
+    }
+    
+    .resource-icon {
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2.5rem;
+      background: pink;
+    border-radius: var(--border-radius);
+  /* Each category gets a different color via class override in HTML */
+}
+
+/* Example color classes you can apply to .resource-icon in HTML */
+.resource-icon.color1 { background-color: #FF6F61; } /* Coral */
+.resource-icon.color2 { background-color: #6B5B95; } /* Purple */
+.resource-icon.color3 { background-color: #88B794; } /* Green */
+.resource-icon.color4 { background-color: #355C7D; } /* Navy Blue */
+.resource-icon.color5 { background-color: #F7CAC9; } /* Pink */
+.resource-icon.color6 { background-color: #92C7CF; } /* Light Blue */
+.resource-icon.color7 { background-color: #FAC748; } /* Yellow/Gold */
+.resource-icon.color8 { background-color: #4A6FA6; } /* Steel Blue */
+
+/* Reduce the size of the entire resource card to ~50% of original */
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjusted width */
+  gap: 1rem; /* Reduced gap */
+  padding: 1rem;
+}
+
+    .resource-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+    }
+    
+    .resource-description {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 1.2rem;
+      flex: 1;
+      line-height: 1.6;
+    }
+    
+    .resource-feature {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .resource-feature i {
+      color: var(--primary-green);
+      margin-right: 0.5rem;
+    }
+    
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: var(--primary-green);
+      color: white;
+      text-decoration: none;
+      padding: 0.8rem;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      transition: var(--transition);
+      margin-top: 1rem;
+      text-align: center;
+    }
+    
+    .resource-link:hover {
+      background: var(--secondary-green);
+      transform: translateY(-2px);
+    }
+ 
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    
+    .footer-section {
+      flex: 1;
+      min-width: 250px;
+    }
+    
+    .footer-section h4 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+    
+    .footer-section h4::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--accent-gold);
+    }
+    
+    .footer-section p,
+    .footer-section a {
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 0.75rem;
+      display: block;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .footer-section a:hover {
+      color: var(--white);
+      transform: translateX(5px);
+    }
+    
+    .social-icons {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .social-icons a {
+      color: white;
+      font-size: 1.5rem;
+      transition: var(--transition);
+    }
+    
+    .social-icons a:hover {
+      color: var(--accent-gold);
+      transform: translateY(-3px);
+    }
+    
+    .copyright {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+      
+      .logo-container {
+        justify-content: center;
+      }
+      
+      .resource-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .features-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .feature {
+        width: 100%;
+        max-width: 350px;
+      }
+    }
+  </style>
+
+</head>
+<body>
+<!-- Sticky Header Wrapper -->
+<div class="sticky-header-wrapper">
+  <!-- Header -->
+  <header class="header-container">
+    <div class="header-content">
+      <div class="logo-container">
+        <img src="download.jpg" alt="SRCOE Logo" class="college-logo">
+        <div class="logo-text">
+          <h1>SA'ADATU RIMI COLLEGE OF EDUCATION</h1>
+          <p>A Citadel of Teacher Training Excellence</p>
+        </div>
+      </div>
+      <div class="datetime" id="datetime"></div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="nav-container">
+    <div class="main-nav">
+      <!-- Home Button -->
+      <a href="index.html" class="nav-link">🏠 Home</a>
+
+      <!-- Other Sections -->
+      <button class="nav-link active" onclick="showSection('books')">Simulations,</button>
+      <button class="nav-link" onclick="showSection('journals')">Journals</button>
+      <button class="nav-link" onclick="showSection('projects')">Student Projects</button>
+      <button class="nav-link" onclick="showSection('internal-videos')">Internal Videos</button>
+      <button class="nav-link" onclick="showSection('external-videos')">External Videos</button>
+      <button class="nav-link" onclick="showSection('thesis')">Thesis & Dissertations</button>
+      <button class="nav-link" onclick="showSection('research')"> Screen Recording</button>
+      <button class="nav-link" onclick="showSection('ai-tools')">AI Tools</button>
+    </div>
+  </nav>
+</div>
+
+<!-- Main Content -->
+<main class="main-content">
+  <!-- Books Section -->
+  <section id="books" class="repository-section">
+        <h2 class="section-title">Interactive Educational Platforms</h2>
+    
+    <p class="intro-text">
+      Explore our curated collection of free interactive learning platforms. All resources are available without login requirements, 
+      providing instant access to simulations, virtual labs, and educational tools across various STEM subjects.
+    </p>
+    
+    <div class="features-container">
+      <div class="feature">
+        <i class="fas fa-lock-open"></i>
+        <span>No Login Required</span>
+      </div>
+      <div class="feature">
+        <i class="fas fa-mobile-alt"></i>
+        <span>Mobile-Friendly</span>
+      </div>
+      <div class="feature">
+        <i class="fas fa-globe"></i>
+        <span>Free Access</span>
+      </div>
+      <div class="feature">
+        <i class="fas fa-graduation-cap"></i>
+        <span>Educational Focus</span>
+      </div>
+    </div>
+    
+    <div class="category-container">
+      <!-- Science & Math -->
+      <div class="category-accordion">
+        <button class="accordion-header">
+          <i class="fas fa-atom"></i> Science & Math
+          <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="accordion-content">
+          <div class="resource-grid">
+            <!-- PhET -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-flask"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">PhET Interactive Simulations</h3>
+                <p class="resource-description">Interactive science and math simulations for physics, chemistry, biology, and more.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login needed - just click and play</span>
+                </div>
+                <a href="https://phet.colorado.edu/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Walter Fendt -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-rocket"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Walter Fendt Physics Applets</h3>
+                <p class="resource-description">High-quality HTML5 simulations for physics, astronomy, and math.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Fully accessible without login</span>
+                </div>
+                <a href="https://www.walter-fendt.de/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Physics Classroom -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-lightbulb"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Physics Classroom Interactives</h3>
+                <p class="resource-description">Interactive simulations for physics concepts.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Free and no login required</span>
+                </div>
+                <a href="https://www.physicsclassroom.com/Physics-Interactives" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- GeoGebra -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-calculator"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">GeoGebra Classic</h3>
+                <p class="resource-description">Interactive tools for math including algebra, geometry, and calculus.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Use directly in browser - no login needed</span>
+                </div>
+                <a href="https://www.geogebra.org/calculator" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Falstad -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-wave-square"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Falstad Simulations</h3>
+                <p class="resource-description">Physics-based simulations like waves, circuits, quantum mechanics, and more.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Run in browser with no account</span>
+                </div>
+                <a href="https://www.falstad.com/mathphysics.html" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Chemistry -->
+      <div class="category-accordion">
+        <button class="accordion-header">
+          <i class="fas fa-flask"></i> Chemistry
+          <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="accordion-content">
+          <div class="resource-grid">
+            <!-- ChemCollective -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-vial"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">ChemCollective Virtual Labs</h3>
+                <p class="resource-description">Interactive virtual lab experiments for chemistry.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Access labs directly - no login</span>
+                </div>
+                <a href="http://chemcollective.org/vlab" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- MEL Chemistry -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-vr-cardboard"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">MEL Chemistry VR Experiments (Web)</h3>
+                <p class="resource-description">Interactive chemistry experiments in your browser.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Free web version available - no login</span>
+                </div>
+                <a href="https://melscience.com/US-en/chemistry/articles/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- ACS -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-atom"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">ACS Middle School Chemistry</h3>
+                <p class="resource-description">Chapter-based interactive content on basic chemistry.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Open and use instantly</span>
+                </div>
+                <a href="https://www.acs.org/content/acs/en/education/resources/k-8/inquiryinaction.html" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Biology -->
+      <div class="category-accordion">
+        <button class="accordion-header">
+          <i class="fas fa-dna"></i> Biology
+          <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="accordion-content">
+          <div class="resource-grid">
+            <!-- HHMI -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-microscope"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">HHMI Biointeractive Virtual Labs</h3>
+                <p class="resource-description">Interactive labs on topics like heart physiology, ecology, and genetics.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login - just open and explore</span>
+                </div>
+                <a href="https://www.biointeractive.org/classroom-resources/virtual-labs" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- BioRender -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-project-diagram"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">BioRender Public Diagrams</h3>
+                <p class="resource-description">View ready-made biology diagrams and processes.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login to view diagrams</span>
+                </div>
+                <a href="https://biorender.com/gallery/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Earth Science & Geography -->
+      <div class="category-accordion">
+        <button class="accordion-header">
+          <i class="fas fa-globe-americas"></i> Earth Science & Geography
+          <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="accordion-content">
+          <div class="resource-grid">
+            <!-- NASA -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-satellite"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">NASA Earth Observatory</h3>
+                <p class="resource-description">Real-time and historical data visualizations about Earth systems.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login required</span>
+                </div>
+                <a href="https://earthobservatory.nasa.gov/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Earth Nullschool -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-wind"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Earth Nullschool</h3>
+                <p class="resource-description">Real-time global weather, wind, ocean currents visualization.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Fully interactive - no login</span>
+                </div>
+                <a href="https://earth.nullschool.net/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- National Geographic -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-map"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">National Geographic Education Resources</h3>
+                <p class="resource-description">Interactive maps and geography lessons.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Open access</span>
+                </div>
+                <a href="https://www.nationalgeographic.org/education/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Engineering & Technology -->
+      <div class="category-accordion">
+        <button class="accordion-header">
+          <i class="fas fa-cogs"></i> Engineering & Technology
+          <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="accordion-content">
+          <div class="resource-grid">
+            <!-- CircuitLab -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">CircuitLab Public Circuits</h3>
+                <p class="resource-description">View and simulate public electronic circuits.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login to run simulations</span>
+                </div>
+                <a href="https://www.circuitlab.com/public/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- SimScale -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-fan"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">SimScale Public Projects</h3>
+                <p class="resource-description">Cloud-based engineering simulations (CFD, thermal analysis).</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>View and duplicate public projects - no login needed</span>
+                </div>
+                <a href="https://www.simscale.com/projects/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Onshape -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-cube"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Onshape Learn Modules</h3>
+                <p class="resource-description">CAD and mechanical engineering learning modules.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login - browse and learn</span>
+                </div>
+                <a href="https://learn.onshape.com/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Data & Statistics -->
+      <div class="category-accordion">
+        <button class="accordion-header">
+          <i class="fas fa-chart-line"></i> Data & Statistics Visualization
+          <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="accordion-content">
+          <div class="resource-grid">
+            <!-- Desmos -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-chart-bar"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Desmos Graphing Calculator</h3>
+                <p class="resource-description">Powerful graphing tool with interactive math features.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Fully functional in browser - no login</span>
+                </div>
+                <a href="https://www.desmos.com/calculator" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Gapminder -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-globe-africa"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Gapminder Tools</h3>
+                <p class="resource-description">Visualize real-world data trends over time.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login - just start exploring</span>
+                </div>
+                <a href="https://www.gapminder.org/tools/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Our World in Data -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-database"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Our World in Data</h3>
+                <p class="resource-description">Interactive charts and data visualizations on global development.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>All visualizations are open access</span>
+                </div>
+                <a href="https://ourworldindata.org/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Game-Based Learning -->
+      <div class="category-accordion">
+        <button class="accordion-header">
+          <i class="fas fa-gamepad"></i> Game-Based Learning
+          <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="accordion-content">
+          <div class="resource-grid">
+            <!-- Scratch -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-cat"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Scratch Explore Projects</h3>
+                <p class="resource-description">Try out interactive animations, games, and simulations created by users.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Play directly - no login</span>
+                </div>
+                <a href="https://scratch.mit.edu/explore/projects/all" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Khan Academy -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Khan Academy Science Courses</h3>
+                <p class="resource-description">Interactive lessons with embedded simulations.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login required to browse</span>
+                </div>
+                <a href="https://www.khanacademy.org/science" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- General Simulation Platforms -->
+      <div class="category-accordion">
+        <button class="accordion-header">
+          <i class="fas fa-laptop-code"></i> General Simulation Platforms
+          <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="accordion-content">
+          <div class="resource-grid">
+            <!-- Zooniverse -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Zooniverse Projects</h3>
+                <p class="resource-description">Citizen science projects with interactive simulations and real-world data.</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>Participate without logging in</span>
+                </div>
+                <a href="https://www.zooniverse.org/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+            
+            <!-- Archive.is -->
+            <div class="resource-card">
+              <div class="resource-icon">
+                <i class="fas fa-archive"></i>
+              </div>
+              <div class="resource-content">
+                <h3 class="resource-title">Archive.is</h3>
+                <p class="resource-description">Save or view archived versions of any webpage (great for saving simulation pages).</p>
+                <div class="resource-feature">
+                  <i class="fas fa-check-circle"></i>
+                  <span>No login needed</span>
+                </div>
+                <a href="https://archive.is/" target="_blank" class="resource-link">
+                  <i class="fas fa-external-link-alt"></i> Visit Platform
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journals Section -->
+  <section id="journals" class="repository-section">
+    <h2 class="section-title">Journals Collection</h2>
+    
+    <div class="search-bar">
+      <input type="text" id="search-journals" placeholder="Search journals..." oninput="filterResources('journals')" />
+      <button class="search-button">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+    
+    <!-- Dynamic Journals Grid -->
+    <div class="resource-grid" id="grid-journals">
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading journals...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journal Resources Section -->
+  <section id="journal-resources" class="repository-section resources-section">
+    <h2 class="section-title">Journal Resources</h2>
+    <p class="section-description">Explore these recommended journal sites and databases</p>
+    
+    <div class="resource-grid">
+      <!-- Multidisciplinary & General Research -->
+      <div class="resource-category">
+        <h4 class="category-title"><i class="fas fa-globe"></i> Multidisciplinary & General Research</h4>
+        <div class="journal-cards">
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #4285F4;">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="journal-info">
+              <h3>Google Scholar</h3>
+              <p>Searches scholarly literature across disciplines and publishers.</p>
+              <a href="https://scholar.google.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #3d5a80;">
+              <i class="fas fa-archive"></i>
+            </div>
+            <div class="journal-info">
+              <h3>JSTOR</h3>
+              <p>Archival access to journals in humanities and social sciences.</p>
+              <a href="https://www.jstor.org" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #2E7D32;">
+              <i class="fas fa-book-open"></i>
+            </div>
+            <div class="journal-info">
+              <h3>DOAJ</h3>
+              <p>Directory of Open Access Journals with peer-reviewed content.</p>
+              <a href="https://www.doaj.org" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #FF6D00;">
+              <i class="fas fa-search"></i>
+            </div>
+            <div class="journal-info">
+              <h3>Scopus</h3>
+              <p>Abstract and citation database of scholarly literature.</p>
+              <a href="https://www.scopus.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #0D47A1;">
+              <i class="fas fa-atom"></i>
+            </div>
+            <div class="journal-info">
+              <h3>Web of Science</h3>
+              <p>Highly respected multidisciplinary citation index.</p>
+              <a href="https://www.webofscience.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Health & Medical Research -->
+      <div class="resource-category">
+        <h4 class="category-title"><i class="fas fa-heartbeat"></i> Health & Medical Research</h4>
+        <div class="journal-cards">
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #1976D2;">
+              <i class="fas fa-medkit"></i>
+            </div>
+            <div class="journal-info">
+              <h3>PubMed</h3>
+              <p>Biomedical research articles and clinical studies.</p>
+              <a href="https://pubmed.ncbi.nlm.nih.gov" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #4CAF50;">
+              <i class="fas fa-dna"></i>
+            </div>
+            <div class="journal-info">
+              <h3>BioMed Central</h3>
+              <p>Open-access journals in health and life sciences.</p>
+              <a href="https://www.biomedcentral.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #D32F2F;">
+              <i class="fas fa-hospital"></i>
+            </div>
+            <div class="journal-info">
+              <h3>The Lancet</h3>
+              <p>Prestigious journals on medicine and global health.</p>
+              <a href="https://www.thelancet.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Science, Engineering & Technology -->
+      <div class="resource-category">
+        <h4 class="category-title"><i class="fas fa-microscope"></i> Science, Engineering & Technology</h4>
+        <div class="journal-cards">
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #00629B;">
+              <i class="fas fa-microchip"></i>
+            </div>
+            <div class="journal-info">
+              <h3>IEEE Xplore</h3>
+              <p>Technical literature in engineering and computer science.</p>
+              <a href="https://ieeexplore.ieee.org" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #FF6D00;">
+              <i class="fas fa-flask"></i>
+            </div>
+            <div class="journal-info">
+              <h3>ScienceDirect</h3>
+              <p>Peer-reviewed scientific articles and book chapters.</p>
+              <a href="https://www.sciencedirect.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #0277BD;">
+              <i class="fas fa-leaf"></i>
+            </div>
+            <div class="journal-info">
+              <h3>Nature</h3>
+              <p>Top-tier science journals including Nature.</p>
+              <a href="https://www.nature.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #689F38;">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="journal-info">
+              <h3>SpringerLink</h3>
+              <p>Books and journals across science, technology, and medicine.</p>
+              <a href="https://link.springer.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Education, Arts & Social Sciences -->
+      <div class="resource-category">
+        <h4 class="category-title"><i class="fas fa-graduation-cap"></i> Education, Arts & Social Sciences</h4>
+        <div class="journal-cards">
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #3949AB;">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <div class="journal-info">
+              <h3>ERIC</h3>
+              <p>Research articles and policy documents in education.</p>
+              <a href="https://eric.ed.gov" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #D81B60;">
+              <i class="fas fa-paint-brush"></i>
+            </div>
+            <div class="journal-info">
+              <h3>Taylor & Francis</h3>
+              <p>Journals in education, humanities, and social sciences.</p>
+              <a href="https://www.tandfonline.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #5E35B1;">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="journal-info">
+              <h3>SAGE Journals</h3>
+              <p>Social sciences, health, and education research.</p>
+              <a href="https://journals.sagepub.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Business, Law & Economics -->
+      <div class="resource-category">
+        <h4 class="category-title"><i class="fas fa-briefcase"></i> Business, Law & Economics</h4>
+        <div class="journal-cards">
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #455A64;">
+              <i class="fas fa-balance-scale"></i>
+            </div>
+            <div class="journal-info">
+              <h3>HeinOnline</h3>
+              <p>Legal and government research resources.</p>
+              <a href="https://www.heinonline.org" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #00897B;">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="journal-info">
+              <h3>EconLit</h3>
+              <p>Comprehensive database for economics literature.</p>
+              <a href="https://www.ebsco.com/products/research-databases/econlit" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #0097A7;">
+              <i class="fas fa-building"></i>
+            </div>
+            <div class="journal-info">
+              <h3>Emerald Insight</h3>
+              <p>Business, management, and social science journals.</p>
+              <a href="https://www.emerald.com/insight" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Open Access Research Repositories -->
+      <div class="resource-category">
+        <h4 class="category-title"><i class="fas fa-lock-open"></i> Open Access Research Repositories</h4>
+        <div class="journal-cards">
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #00BCD4;">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <div class="journal-info">
+              <h3>ResearchGate</h3>
+              <p>A professional network for sharing academic publications.</p>
+              <a href="https://www.researchgate.net" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #7B1FA2;">
+              <i class="fas fa-university"></i>
+            </div>
+            <div class="journal-info">
+              <h3>Academia.edu</h3>
+              <p>Platform to share, follow, and discover academic work.</p>
+              <a href="https://www.academia.edu" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="journal-card">
+            <div class="journal-logo" style="background-color: #5D4037;">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="journal-info">
+              <h3>SSRN</h3>
+              <p>Early-stage research in social sciences and law.</p>
+              <a href="https://www.ssrn.com" target="_blank" class="journal-link">
+                Visit Site <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+      <a href="#journals"><i class="fas fa-arrow-up"></i> Back to Journals Collection</a>
+    </div>
+  </section>`;
+
+
+
+ <!-- Student Projects Section -->
+<section id="projects" class="repository-section">
+  <h2 class="section-title">Student Projects</h2>
+  
+  
+  <!-- Project Gallery -->
+  <div class="search-bar">
+    <input type="text" id="search-projects" placeholder="Search projects by title, author, student ID, supervisor, department, or abstract..." oninput="filterResources('projects')" />
+  </div>
+  
+  <div class="resource-grid" id="grid-projects">
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+  
+  <!-- Academic Resource Panel -->
+  <div class="academic-resources">
+    <h3 class="resources-title"><i class="fas fa-book-open"></i> Helpful Resources for Students</h3>
+    
+    <div class="resources-grid">
+      <!-- Learning Platforms -->
+      <div class="resource-category">
+        <h4><i class="fas fa-graduation-cap"></i> Learning Platforms</h4>
+        <div class="resource-cards">
+          <a href="https://www.khanacademy.org" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #14a96d;">
+              <i class="fas fa-atom"></i>
+            </div>
+            <div class="resource-info">
+              <h5>Khan Academy</h5>
+              <p>Free courses in math, science, humanities</p>
+            </div>
+          </a>
+          
+          <a href="https://www.coursera.org" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #0056d2;">
+              <i class="fas fa-certificate"></i>
+            </div>
+            <div class="resource-info">
+              <h5>Coursera</h5>
+              <p>Online university-level courses with certificates</p>
+            </div>
+          </a>
+          
+          <a href="https://www.edx.org" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #193a7a;">
+              <i class="fas fa-university"></i>
+            </div>
+            <div class="resource-info">
+              <h5>edX</h5>
+              <p>Harvard/MIT online courses, free to audit</p>
+            </div>
+          </a>
+          
+          <a href="https://www.udemy.com" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #a435f0;">
+              <i class="fas fa-laptop-code"></i>
+            </div>
+            <div class="resource-info">
+              <h5>Udemy</h5>
+              <p>Affordable skill-based courses</p>
+            </div>
+          </a>
+          
+          <a href="https://ocw.mit.edu" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #8a8a8e;">
+              <i class="fas fa-flask"></i>
+            </div>
+            <div class="resource-info">
+              <h5>MIT OpenCourseWare</h5>
+              <p>Free MIT course materials</p>
+            </div>
+          </a>
+          
+          <a href="https://online-learning.harvard.edu" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #a51c30;">
+              <i class="fas fa-gem"></i>
+            </div>
+            <div class="resource-info">
+              <h5>Harvard Online Courses</h5>
+              <p>Professional and free courses</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Science & Math Tools -->
+      <div class="resource-category">
+        <h4><i class="fas fa-square-root-alt"></i> Science & Math Tools</h4>
+        <div class="resource-cards">
+          <a href="https://www.wolframalpha.com" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #dd1100;">
+              <i class="fas fa-calculator"></i>
+            </div>
+            <div class="resource-info">
+              <h5>Wolfram Alpha</h5>
+              <p>Solve equations, analyze data</p>
+            </div>
+          </a>
+          
+          <a href="https://phet.colorado.edu" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #4a6baf;">
+              <i class="fas fa-atom"></i>
+            </div>
+            <div class="resource-info">
+              <h5>PhET Simulations</h5>
+              <p>Interactive science/math simulations</p>
+            </div>
+          </a>
+          
+          <a href="https://www.desmos.com/calculator" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #3178e1;">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="resource-info">
+              <h5>Desmos Calculator</h5>
+              <p>Online graphing calculator</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Writing & Academic Support -->
+      <div class="resource-category">
+        <h4><i class="fas fa-pen-fancy"></i> Writing & Academic Support</h4>
+        <div class="resource-cards">
+          <a href="https://www.grammarly.com" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #15c39a;">
+              <i class="fas fa-spell-check"></i>
+            </div>
+            <div class="resource-info">
+              <h5>Grammarly</h5>
+              <p>Writing and grammar checker</p>
+            </div>
+          </a>
+          
+          <a href="https://www.zotero.org" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #cc2936;">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="resource-info">
+              <h5>Zotero</h5>
+              <p>Reference manager and citation tool</p>
+            </div>
+          </a>
+          
+          <a href="https://www.plagscan.com" target="_blank" class="resource-card">
+            <div class="resource-icon" style="background-color: #3d5a80;">
+              <i class="fas fa-search"></i>
+            </div>
+            <div class="resource-info">
+              <h5>PlagScan</h5>
+              <p>Plagiarism detection for academic writing</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+  <!-- Thesis Section -->
+  <section id="thesis" class="repository-section">
+    <h2 class="section-title">Thesis & Dissertations</h2>
+    <div class="search-bar">
+      <input type="text" id="search-thesis" placeholder="Search thesis..." oninput="filterResources('thesis')" />
+    </div>
+    <div class="resource-grid" id="grid-thesis">
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Research Section -->
+  <section id="research" class="repository-section">
+    <h2 class="section-title">Research Papers</h2>
+    <section class="screen-recorder-section">
+  <!-- Floating Preview -->
+  <div class="floating-preview" id="floating-preview">
+    <div class="preview-handle" id="close-preview">
+      <i class="fas fa-times"></i>
+    </div>
+    <video id="floating-video" autoplay muted></video>
+    <div class="preview-controls">
+      <button id="preview-minimize">
+        <i class="fas fa-minus"></i>
+      </button>
+      <button id="preview-maximize">
+        <i class="fas fa-expand"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="recorder-container">
+    <!-- Header -->
+    <header class="recorder-header">
+      <h1><i class="fas fa-video"></i> Screen Recorder Pro</h1>
+      <p>Professional screen recording with floating camera preview</p>
+    </header>
+
+    <!-- Controls Section -->
+    <div class="recorder-controls">
+      <div class="controls-header">
+        <h2><i class="fas fa-sliders-h"></i> Recording Controls</h2>
+      </div>
+      
+      <div class="controls">
+        <button class="control-btn" id="start-btn">
+          <i class="fas fa-record-vinyl"></i>
+          <span>Start Recording</span>
+        </button>
+        <button class="control-btn" id="stop-btn">
+          <i class="fas fa-stop"></i>
+          <span>Stop Recording</span>
+        </button>
+      </div>
+      
+      <div class="timer-container">
+        <div id="timer">00:00:00</div>
+      </div>
+      
+      <div class="settings">
+        <div class="setting-group">
+          <div class="setting-item">
+            <button id="toggle-camera-btn">
+              <i class="fas fa-video"></i> Toggle Camera Preview
+            </button>
+          </div>
+          
+          <div class="setting-item">
+            <button id="download-btn">
+              <i class="fas fa-download"></i> Download Recording
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="status-indicators">
+        <div class="status" id="recording-status">
+          <div class="status-dot"></div>
+          <span>Recording</span>
+        </div>
+        <div class="status" id="camera-status">
+          <div class="status-dot"></div>
+          <span>Camera</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Screen Recorder Component Styles */
+    .screen-recorder-section {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .recorder-container {
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .recorder-header {
+      text-align: center;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    }
+
+    .recorder-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, #4361ee, #4cc9f0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .recorder-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 500px;
+      margin: 0 auto;
+      color: inherit;
+    }
+
+    .recorder-controls {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    }
+
+    .controls-header {
+      margin-bottom: 25px;
+    }
+
+    .controls-header h2 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      color: inherit;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 25px;
+      justify-content: center;
+    }
+
+    .control-btn {
+      min-width: 150px;
+      padding: 18px 15px;
+      border-radius: 15px;
+      border: none;
+      background: linear-gradient(135deg, #4361ee, #3a0ca3);
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    .control-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+    }
+
+    .control-btn:active {
+      transform: translateY(1px);
+    }
+
+    #start-btn {
+      background: linear-gradient(135deg, #4cc9f0, #0a9396);
+    }
+
+    #start-btn:hover {
+      box-shadow: 0 6px 20px rgba(76, 201, 240, 0.4);
+    }
+
+    #stop-btn {
+      background: linear-gradient(135deg, #e63946, #9d0208);
+    }
+
+    #stop-btn:hover {
+      box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+    }
+
+    .timer-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+    }
+
+    #timer {
+      font-size: 2.5rem;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(45deg, #f72585, #fca311);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding: 10px 25px;
+      border-radius: 15px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .settings {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .setting-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+      justify-content: center;
+    }
+
+    .setting-item {
+      min-width: 200px;
+    }
+
+    .setting-item button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, #f72585, #b5179e);
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .setting-item button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);
+    }
+
+    .status-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 50px;
+      color: inherit;
+    }
+
+    .status-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #6c757d;
+    }
+
+    .status.recording .status-dot {
+      background: #e63946;
+      box-shadow: 0 0 10px #e63946;
+      animation: pulse 1.5s infinite;
+    }
+
+    .status.active .status-dot {
+      background: #4cc9f0;
+      box-shadow: 0 0 10px #4cc9f0;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.5; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0.5; transform: scale(0.95); }
+    }
+
+    .recording-animation {
+      animation: pulse 1.5s infinite;
+    }
+
+    /* Floating Preview Styles */
+    .floating-preview {
+      position: fixed;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #f72585;
+      box-shadow: 0 0 20px rgba(247, 37, 133, 0.7);
+      cursor: move;
+      z-index: 10000;
+      bottom: 30px;
+      right: 30px;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .floating-preview:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(247, 37, 133, 0.9);
+    }
+
+    .floating-preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      transform: scaleX(-1);
+    }
+
+    .preview-handle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1001;
+      transition: all 0.2s ease;
+    }
+
+    .preview-handle:hover {
+      background: rgba(0, 0, 0, 0.7);
+      transform: scale(1.1);
+    }
+
+    .preview-controls {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .preview-controls button {
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preview-controls button:hover {
+      background: rgba(0, 0, 0, 0.8);
+      transform: scale(1.1);
+    }
+  </style>
+
+  <script>
+    // DOM Elements
+    const startBtn = document.getElementById("start-btn");
+    const stopBtn = document.getElementById("stop-btn");
+    const timerDisplay = document.getElementById("timer");
+    const floatingVideo = document.getElementById("floating-video");
+    const recordingStatus = document.getElementById("recording-status");
+    const cameraStatus = document.getElementById("camera-status");
+    const downloadBtn = document.getElementById("download-btn");
+    const floatingPreview = document.getElementById("floating-preview");
+    const closePreviewBtn = document.getElementById("close-preview");
+    const toggleCameraBtn = document.getElementById("toggle-camera-btn");
+    const minimizeBtn = document.getElementById("preview-minimize");
+    const maximizeBtn = document.getElementById("preview-maximize");
+    
+    // State Variables
+    let mediaRecorder;
+    let recordedBlobs = [];
+    let timerInterval;
+    let seconds = 0;
+    let isRecording = false;
+    let lastRecordingUrl = null;
+    let isCameraActive = true;
+    let cameraStream = null;
+    let isPreviewMinimized = false;
+    let originalPreviewSize = { width: "180px", height: "180px" };
+    
+    // Timer Logic
+    function startTimer() {
+      seconds = 0;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        seconds++;
+        updateTimerDisplay();
+      }, 1000);
+    }
+    
+    function updateTimerDisplay() {
+      const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
+      const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+      const secs = String(seconds % 60).padStart(2, "0");
+      timerDisplay.textContent = `${hours}:${mins}:${secs}`;
+    }
+    
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+    
+    // Initialize camera preview
+    async function initCamera() {
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: "user"
+          },
+          audio: false
+        });
+        
+        floatingVideo.srcObject = cameraStream;
+        cameraStatus.classList.add("active");
+        isCameraActive = true;
+      } catch (err) {
+        console.error("Error accessing camera:", err);
+        cameraStatus.classList.remove("active");
+        isCameraActive = false;
+        floatingPreview.style.display = "none";
+      }
+    }
+    
+    // Recording Logic
+    startBtn.addEventListener("click", async () => {
+      if (isRecording) return;
+      
+      try {
+        // Capture entire screen
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({
+          video: {
+            cursor: "always",
+            displaySurface: "monitor"
+          },
+          audio: true
+        });
+        
+        isRecording = true;
+        recordingStatus.classList.add("active");
+        startBtn.classList.add("recording-animation");
+        startBtn.innerHTML = '<i class="fas fa-record-vinyl"></i><span>Recording...</span>';
+        
+        // Initialize recording
+        recordedBlobs = [];
+        
+        // Check for supported MIME types
+        const options = { mimeType: 'video/webm;codecs=vp9' };
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+          options.mimeType = 'video/webm;codecs=vp8';
+          if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            options.mimeType = 'video/webm';
+          }
+        }
+        
+        mediaRecorder = new MediaRecorder(screenStream, options);
+        
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) recordedBlobs.push(event.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+          const superBuffer = new Blob(recordedBlobs, { type: "video/webm" });
+          lastRecordingUrl = URL.createObjectURL(superBuffer);
+          
+          // Reset UI
+          isRecording = false;
+          recordingStatus.classList.remove("active");
+          startBtn.classList.remove("recording-animation");
+          startBtn.innerHTML = '<i class="fas fa-record-vinyl"></i><span>Start Recording</span>';
+          
+          // Stop all tracks
+          screenStream.getTracks().forEach(track => track.stop());
+        };
+        
+        mediaRecorder.start(1000); // Collect data every 1 second
+        startTimer();
+      } catch (err) {
+        alert("Error accessing screen: " + err.message);
+        resetRecordingState();
+      }
+    });
+    
+    stopBtn.addEventListener("click", () => {
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+        stopTimer();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      }
+    });
+    
+    downloadBtn.addEventListener("click", () => {
+      if (lastRecordingUrl) {
+        const a = document.createElement("a");
+        a.href = lastRecordingUrl;
+        a.download = `screen-recording-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.webm`;
+        a.click();
+      } else {
+        alert("No recording available. Please record something first.");
+      }
+    });
+    
+    function resetRecordingState() {
+      isRecording = false;
+      recordingStatus.classList.remove("active");
+      startBtn.classList.remove("recording-animation");
+      startBtn.innerHTML = '<i class="fas fa-record-vinyl"></i><span>Start Recording</span>';
+      stopTimer();
+      timerDisplay.textContent = "00:00:00";
+    }
+    
+    // Camera Preview Functionality
+    toggleCameraBtn.addEventListener("click", () => {
+      if (isCameraActive) {
+        // Stop camera
+        if (cameraStream) {
+          cameraStream.getTracks().forEach(track => track.stop());
+          cameraStream = null;
+        }
+        floatingPreview.style.display = "none";
+        cameraStatus.classList.remove("active");
+        toggleCameraBtn.innerHTML = '<i class="fas fa-video-slash"></i> Enable Camera Preview';
+      } else {
+        // Start camera
+        initCamera();
+        floatingPreview.style.display = "block";
+        toggleCameraBtn.innerHTML = '<i class="fas fa-video"></i> Disable Camera Preview';
+      }
+      isCameraActive = !isCameraActive;
+    });
+    
+    closePreviewBtn.addEventListener("click", () => {
+      floatingPreview.style.display = "none";
+      toggleCameraBtn.innerHTML = '<i class="fas fa-video"></i> Enable Camera Preview';
+      isCameraActive = false;
+      cameraStatus.classList.remove("active");
+    });
+    
+    // Preview size controls
+    minimizeBtn.addEventListener("click", () => {
+      if (isPreviewMinimized) {
+        floatingPreview.style.width = originalPreviewSize.width;
+        floatingPreview.style.height = originalPreviewSize.height;
+        minimizeBtn.innerHTML = '<i class="fas fa-minus"></i>';
+        maximizeBtn.style.display = "block";
+      } else {
+        originalPreviewSize = {
+          width: floatingPreview.style.width,
+          height: floatingPreview.style.height
+        };
+        floatingPreview.style.width = "40px";
+        floatingPreview.style.height = "40px";
+        minimizeBtn.innerHTML = '<i class="fas fa-plus"></i>';
+        maximizeBtn.style.display = "none";
+      }
+      isPreviewMinimized = !isPreviewMinimized;
+    });
+    
+    maximizeBtn.addEventListener("click", () => {
+      if (floatingPreview.style.width === "300px") {
+        floatingPreview.style.width = originalPreviewSize.width;
+        floatingPreview.style.height = originalPreviewSize.height;
+        maximizeBtn.innerHTML = '<i class="fas fa-expand"></i>';
+      } else {
+        originalPreviewSize = {
+          width: floatingPreview.style.width,
+          height: floatingPreview.style.height
+        };
+        floatingPreview.style.width = "300px";
+        floatingPreview.style.height = "300px";
+        maximizeBtn.innerHTML = '<i class="fas fa-compress"></i>';
+      }
+    });
+    
+    // Draggable Floating Preview
+    let isDragging = false;
+    let offsetX, offsetY;
+    
+    floatingPreview.addEventListener("mousedown", (e) => {
+      if (e.target === closePreviewBtn || e.target === minimizeBtn || e.target === maximizeBtn) return;
+      
+      isDragging = true;
+      offsetX = e.clientX - floatingPreview.getBoundingClientRect().left;
+      offsetY = e.clientY - floatingPreview.getBoundingClientRect().top;
+      floatingPreview.style.cursor = "grabbing";
+      floatingPreview.style.zIndex = "10001";
+    });
+    
+    document.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        floatingPreview.style.left = `${e.clientX - offsetX}px`;
+        floatingPreview.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
+    
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      floatingPreview.style.cursor = "move";
+      floatingPreview.style.zIndex = "10000";
+    });
+    
+    // Position the floating preview initially
+    floatingPreview.style.left = "calc(100% - 210px)";
+    floatingPreview.style.top = "calc(100% - 210px)";
+    
+    // Initialize camera on page load
+    window.addEventListener("load", () => {
+      initCamera();
+    });
+  </script>
+</section>
+      </section>
+      
+
+
+
+
+
+
+<section id="ai-tools" class="repository-section">
+  <h2 class="section-title">AI Learning Tools</h2>
+
+  <div class="ai-tools-container" id="grid-ai-tools">
+   
+
+    <!-- Static AI Tool Cards -->
+    <div class="ai-tool-card">
+      <div class="ai-header yajib">
+        <div class="ai-icon"><i class="fas fa-brain"></i></div>
+        <div class="ai-title">YAJIB BlueprintEDU</div>
+        <div class="ai-subtitle">AI-Powered Educational Planning</div>
+      </div>
+      <div class="ai-body">
+        <p class="ai-description">Transform your teaching approach with AI-driven educational planning.</p>
+        <a href="https://app.mindstudio.ai/agents/yajib-blueprintedu-66d7269b/run/2308b73c-f246-4b61-bcec-6b34f17459a2"  target="_blank" class="ai-button yajib">
+          <i class="fas fa-external-link-alt"></i> Launch BlueprintEDU
+        </a>
+      </div>
+    </div>
+
+    <div class="ai-tool-card">
+      <div class="ai-header nastech">
+        <div class="ai-icon"><i class="fas fa-microscope"></i></div>
+        <div class="ai-title">NASTECH</div>
+        <div class="ai-subtitle">Advanced STEM Education Assistant</div>
+      </div>
+      <div class="ai-body">
+        <p class="ai-description">Elevate your science and technology teaching with NASTECH.</p>
+        <a href="https://app.mindstudio.ai/agents/nastech-b6d14cf1/run/9b3b57ce-ac1d-4b3e-abc2-1cd2bc66fef6"  target="_blank" class="ai-button nastech">
+          <i class="fas fa-external-link-alt"></i> Explore NASTECH
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Internal Videos Section -->
+  <section id="internal-videos" class="repository-section">
+    <h2 class="section-title">Internal Video Lectures</h2>
+    <div class="search-bar">
+      <input type="text" id="search-internal-videos" placeholder="Search internal videos..." oninput="filterResources('internal-videos')" />
+    </div>
+    <div class="resource-grid" id="grid-internal-videos">
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+ 
+    <br>
+  
+<!-- Add this new section directly after the Internal Videos section -->
+
+ <!-- Add this new section directly after the Internal Videos section -->
+
+  <h2 class="section-title">🚀 Top Educative, Creative & Tech YouTube Channels (AI, Robotics, Drones & More)</h2>
+  
+  <!-- AI & Machine Learning Category -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-robot"></i> Artificial Intelligence & Machine Learning
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/c/KárolyZsolnai"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #4A90E2;">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Two Minute Papers</h3>
+            <p>Explains latest AI/ML research papers in simple language</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/c/CodeBullet"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #60C6EC;">
+            <i class="fas fa-gamepad"></i>
+          </div>
+          <div class="channel-info">
+            <h3>CodeBullet</h3>
+            <p>Entertaining AI projects – neural networks, bots, games</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/c/YannicKilcher"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #5B78D6;">
+            <i class="fas fa-brain"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Yannic Kilcher</h3>
+            <p>Breakdowns of cutting-edge machine learning research</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/@AIExplained"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #2ED573;">
+            <i class="fas fa-microchip"></i>
+          </div>
+          <div class="channel-info">
+            <h3>AI Explained</h3>
+            <p>Simple explanations of trending AI technologies</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Robotics Category -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-robot"></i> Robotics & Innovation
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/user/BostonDynamics"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #FF4757;">
+            <i class="fas fa-dog"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Boston Dynamics</h3>
+            <p>Advanced humanoid and animal-like robots</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/user/IEEESpectrum"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #1E90FF;">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <div class="channel-info">
+            <h3>IEEE Spectrum Robotics</h3>
+            <p>Real-world robotics applications and innovations</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/c/DIYPerks"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #FF9F1C;">
+            <i class="fas fa-tools"></i>
+          </div>
+          <div class="channel-info">
+            <h3>DIY Perks</h3>
+            <p>High-end DIY projects including robotics innovations</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drone Technology Category -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-drone"></i> Drone Technology & Aerial Creativity
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/c/thedroneu"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #3742FA;">
+            <i class="fas fa-video"></i>
+          </div>
+          <div class="channel-info">
+            <h3>DroneU</h3>
+            <p>Professional drone tutorials and aerial photography tips</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/c/BillyKyle"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #FF6B6B;">
+            <i class="fas fa-camera-retro"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Billy Kyle</h3>
+            <p>Drone reviews and tutorials for all skill levels</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/user/Quadmovr"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #778beb;">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <div class="channel-info">
+            <h3>QuadMovr</h3>
+            <p>High-speed freestyle drone flying and custom builds</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Creativity & Invention Category -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-lightbulb"></i> Creativity, Tech DIY & Invention
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/c/MarkRober"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #2ecc71;">
+            <i class="fas fa-rss"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Mark Rober</h3>
+            <p>Creative science projects and viral engineering builds</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/c/StuffMadeHere"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #f39c12;">
+            <i class="fas fa-hammer"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Stuff Made Here</h3>
+            <p>Incredible engineering projects and robotic builds</p>
+          </div>
+        </a>
+        
+        <a href="https://www.youtube.com/c/TheQ"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #e74c3c;">
+            <i class="fas fa-puzzle-piece"></i>
+          </div>
+          <div class="channel-info">
+            <h3>The Q</h3>
+            <p>Visual builds of mechanical and artistic gadgets</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Existing categories from original file would follow here -->
+  <!-- Science Category -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-flask"></i> Science
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/@kurzgesagt"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #FF6F61;">
+            <i class="fas fa-atom"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Kurzgesagt</h3>
+            <p>Animated explanations of science and philosophy</p>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/@veritasium"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #6A5ACD;">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Veritasium</h3>
+            <p>Science education and engineering topics</p>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/@Vsauce"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #20B2AA;">
+            <i class="fas fa-brain"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Vsauce</h3>
+            <p>Exploring curious scientific questions</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Math Category -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-calculator"></i> Mathematics
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/@3blue1brown"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #4682B4;">
+            <i class="fas fa-infinity"></i>
+          </div>
+          <div class="channel-info">
+            <h3>3Blue1Brown</h3>
+            <p>Animations explaining mathematical concepts</p>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/@numberphile"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #FF6347;">
+            <i class="fas fa-superscript"></i>
+          </div>
+          <div class="channel-info">
+            <h3>Numberphile</h3>
+            <p>Videos about numbers and mathematics</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- History Category -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-landmark"></i> History
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/@crashcourse"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #8B4513;">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="channel-info">
+            <h3>CrashCourse</h3>
+            <p>Educational videos on history and more</p>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/@OverSimplified"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #CD5C5C;">
+            <i class="fas fa-chess"></i>
+          </div>
+          <div class="channel-info">
+            <h3>OverSimplified</h3>
+            <p>Animated historical events explained simply</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Computer Science & Technology -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-laptop-code"></i> Computer Science
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/@freecodecamp"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #2E8B57;">
+            <i class="fas fa-code"></i>
+          </div>
+          <div class="channel-info">
+            <h3>freeCodeCamp.org</h3>
+            <p>Coding tutorials and projects</p>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/@NetNinja"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #1E90FF;">
+            <i class="fas fa-terminal"></i>
+          </div>
+          <div class="channel-info">
+            <h3>The Net Ninja</h3>
+            <p>Web development tutorials</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- General Knowledge -->
+  <div class="category-accordion">
+    <button class="accordion-header">
+      <i class="fas fa-globe"></i> General Knowledge
+      <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+    </button>
+    <div class="accordion-content">
+      <div class="channel-grid">
+        <a href="https://www.youtube.com/@TEDEd"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #FF4500;">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <div class="channel-info">
+            <h3>TED-Ed</h3>
+            <p>Animated educational videos</p>
+          </div>
+        </a>
+        <a href="https://www.youtube.com/@CGPGrey"  target="_blank" class="channel-card">
+          <div class="channel-icon" style="background-color: #708090;">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <div class="channel-info">
+            <h3>CGP Grey</h3>
+            <p>Explanations of complex topics</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- External Videos Section -->
+  <section id="external-videos" class="repository-section">
+    <h2 class="section-title">External Video Lectures</h2>
+    <div class="search-bar">
+      <input type="text" id="search-external-videos" placeholder="Search external videos..." oninput="filterResources('external-videos')" />
+    </div>
+    <div class="resource-grid" id="grid-external-videos">
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close">&times;</button>
+    <div class="modal-body">
+      <div class="modal-left">
+        <div id="modal-cover-container" class="modal-cover-container">
+          <canvas id="modal-cover-canvas" class="modal-cover"></canvas>
+        </div>
+      </div>
+      <div class="modal-right">
+        <h2 id="modal-title" class="modal-title"></h2>
+        <div class="modal-abstract" id="modal-abstract"></div>
+        <div class="modal-actions">
+          <button id="modal-open-pdf" class="modal-btn">
+            <i class="fas fa-file-pdf"></i> Open Full PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- YouTube Modal -->
+<div id="youtube-modal" class="modal">
+  <div class="modal-content" style="max-width: 900px;">
+    <button class="modal-close">&times;</button>
+    <div class="modal-body">
+      <div class="modal-video-container" style="width: 100%;">
+        <iframe id="youtube-player" class="modal-video" src="" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="modal-right">
+        <h2 id="youtube-title" class="modal-title">YouTube Video</h2>
+        <div class="modal-actions">
+          <button class="modal-btn" onclick="window.open(document.getElementById('youtube-player').src, '_blank')">
+            <i class="fab fa-youtube"></i> Open on YouTube
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer-container">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>Contact Us</h4>
+      <p>11KM Zaria Road, Kano</p>
+      <p>Phone: 0906 332 3331</p>
+      <p>Email: library@srcoe.edu.ng</p>
+    </div>
+    <div class="footer-section">
+      <h4>Quick Links</h4>
+      <a href="#">Library Hours</a>
+      <a href="#">Research Help</a>
+      <a href="#">Ask a Librarian</a>
+      <a href="#">Library Policies</a>
+    </div>
+    <div class="footer-section">
+      <h4>Connect With Us</h4>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">
+    © 2025 Sa'adatu Rimi College of Education - Digital Library. All rights reserved.
+  </div>
+</footer>
+
+<!-- AWS SDK -->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1040.0.min.js"></script> 
+<script>
+  // Configuration
+
+// Configuration
+const CONFIG = {
+  accessKeyId: '0057c63aeb3c6120000000005', // Backblaze B2 keyID
+  secretAccessKey: 'K005GW/h8vqZk1L0QGZL+zy58ltyq3c', // Backblaze B2 applicationKey
+  region: 'us-east-005', // Backblaze B2 region
+  bucketName: 'silverlink', // Your Backblaze B2 bucket
+  endpoint: 'https://s3.us-east-005.backblazeb2.com', // Backblaze B2 S3 endpoint
+  folderPaths: {
+    books: 'ebooks/',
+    journals: 'journals/',
+    projects: 'student_projects/',
+    'internal-videos': 'internal_lectures/',
+    'external-videos': 'external_lectures/',
+    thesis: 'research/thesis/',
+    research: 'research/',
+    community: 'community/'
+  }
+};
+
+AWS.config.update({
+  region: CONFIG.region,
+  credentials: new AWS.Credentials(CONFIG.accessKeyId, CONFIG.secretAccessKey)
+});
+
+const s3 = new AWS.S3({
+  endpoint: CONFIG.endpoint, // Add endpoint for Backblaze B2
+  s3ForcePathStyle: true // Required for Backblaze B2
+});
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+
+// Data cache with separate storage for dynamic journals and static resources
+const sectionDataCache = {
+  books: [],
+  journals: [],          // Dynamic journal content
+  journalResources: [],   // Static journal resources
+  projects: [],
+  'internal-videos': [],
+  'external-videos': [],
+  thesis: [],
+  research: [],
+  community: []
+};
+const thumbnailCache = {};
+
+  // Real-time Date Display
+  function updateDateTime() {
+    const now = new Date();
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    };
+    document.getElementById('datetime').textContent = now.toLocaleDateString('en-NG', options);
+  }
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+
+  // Show Selected Section (updated for journal sections)
+  function showSection(id) {
+    // Update active nav button
+    document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.nav-link[onclick="showSection('${id}')"]`).classList.add('active');
+    
+    // Hide all sections
+    document.querySelectorAll('.repository-section').forEach(sec => {
+      sec.classList.remove('active');
+      sec.style.display = 'none';
+    });
+    
+    // Show selected section
+    const activeSection = document.getElementById(id);
+    if (activeSection) {
+      activeSection.classList.add('active');
+      activeSection.style.display = 'block';
+    }
+    
+    // Special handling for journals to show both sections
+    if (id === 'journals') {
+      const resourcesSection = document.getElementById('journal-resources');
+      if (resourcesSection) {
+        resourcesSection.style.display = 'block';
+      }
+    }
+    
+    // Load data if not already loaded (skip for static resources)
+    if (id !== 'journal-resources' && sectionDataCache[id].length === 0) {
+      loadSectionData(id);
+    } else if (id === 'journals') {
+      renderGrid(id, sectionDataCache[id]);
+    }
+  }
+
+  // Extract title from S3 key
+  function extractTitleFromKey(key) {
+    return key.split('/').pop()
+      .replace(/\.pdf$/i, '')
+      .replace(/[_-]/g, ' ')
+      .replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  // Decode metadata values
+  function decodeMetadata(value) {
+    if (!value) return '';
+    try {
+      return decodeURIComponent(value);
+    } catch (error) {
+      console.warn('Failed to decode metadata:', value, error);
+      return value;
+    }
+  }
+
+  // Get metadata value from possible keys
+  function getMetaValue(metadata, possibleKeys) {
+    const meta = metadata.Metadata || {};
+    for (const key of possibleKeys) {
+      if (meta[key] !== undefined && meta[key] !== '') {
+        return decodeMetadata(meta[key]);
+      }
+    }
+    return null;
+  }
+
+  // Generate presigned URL for S3 objects
+  function generatePresignedUrl(key) {
+    return s3.getSignedUrl('getObject', {
+      Bucket: CONFIG.bucketName,
+      Key: key,
+      Expires: 60 * 60
+    });
+  }
+
+  // Generate PDF thumbnail using PDF.js
+  async function generatePdfThumbnail(pdfUrl, canvas) {
+    if (thumbnailCache[pdfUrl]) {
+      const img = new Image();
+      img.src = thumbnailCache[pdfUrl];
+      img.onload = () => {
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+      };
+      return;
+    }
+
+    try {
+      const loadingTask = pdfjsLib.getDocument(pdfUrl);
+      const pdf = await loadingTask.promise;
+      const page = await pdf.getPage(1);
+      
+      const viewport = page.getViewport({ scale: 1.5 });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      await page.render({
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      }).promise;
+
+      // Cache the thumbnail as data URL
+      thumbnailCache[pdfUrl] = canvas.toDataURL();
+    } catch (error) {
+      console.error('Error generating PDF thumbnail:', error);
+      // Fallback to a PDF icon
+      const ctx = canvas.getContext('2d');
+      canvas.width = 200;
+      canvas.height = 300;
+      ctx.fillStyle = '#f5f5f5';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#2E7D32';
+      ctx.font = '30px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('PDF', canvas.width/2, canvas.height/2);
+    }
+  }
+
+  // Get YouTube video ID from URL
+  function getYouTubeId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  }
+
+  // Get YouTube thumbnail URL
+  function getYouTubeThumbnail(url) {
+    const videoId = getYouTubeId(url);
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
+  }
+
+  // Format file size
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i]);
+    
+  }
+
+  // Load section data from S3 (updated for journal sections)
+  async function loadSectionData(sectionId) {
+    // Skip loading for static resources section
+    if (sectionId === 'journal-resources') return;
+
+    const grid = document.getElementById(`grid-${sectionId}`);
+    if (!grid) return;
+    
+    grid.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
+    
+    try {
+      let items = [];
+
+      if (sectionId === 'external-videos') {
+        // Handle external videos (YouTube links)
+        const params = { Bucket: CONFIG.bucketName, Prefix: CONFIG.folderPaths[sectionId] };
+        const data = await s3.listObjectsV2(params).promise();
+        const txtFiles = data.Contents.filter(item => item.Key.toLowerCase().endsWith('.txt'));
+        
+        for (const item of txtFiles) {
+          try {
+            const urlData = await s3.getObject({ Bucket: CONFIG.bucketName, Key: item.Key }).promise();
+            const youtubeUrl = urlData.Body.toString('utf-8').trim();
+            const videoId = getYouTubeId(youtubeUrl);
+            if (videoId) {
+              items.push({
+                key: item.Key,
+                title: extractTitleFromKey(item.Key),
+                url: youtubeUrl,
+                thumbnail: getYouTubeThumbnail(youtubeUrl),
+                date: new Date(item.LastModified).toLocaleDateString(),
+                type: 'external-video'
+              });
+            }
+          } catch (err) {
+            console.error('Error loading external video:', err);
+          }
+        }
+      } else if (sectionId === 'journals') {
+        // Handle dynamic journals content
+        const params = { Bucket: CONFIG.bucketName, Prefix: CONFIG.folderPaths[sectionId] };
+        const data = await s3.listObjectsV2(params).promise();
+        
+        items = await Promise.all(
+          data.Contents
+            .filter(item => !item.Key.endsWith('/'))
+            .map(async item => {
+              try {
+                const headData = await s3.headObject({ Bucket: CONFIG.bucketName, Key: item.Key }).promise();
+                const meta = headData.Metadata || {};
+                
+                const title = getMetaValue(headData, ['x-amz-meta-title']) || extractTitleFromKey(item.Key);
+                const author = getMetaValue(headData, ['x-amz-meta-author']) || "Unknown Author";
+                
+                return {
+                  key: item.Key,
+                  title,
+                  author,
+                  pdfUrl: generatePresignedUrl(item.Key),
+                  type: item.Key.split('.').pop().toLowerCase(),
+                  size: formatFileSize(item.Size),
+                  date: new Date(item.LastModified).toLocaleDateString()
+                };
+              } catch (err) {
+                return {
+                  key: item.Key,
+                  title: extractTitleFromKey(item.Key),
+                  author: "Unknown Author",
+                  pdfUrl: generatePresignedUrl(item.Key),
+                  type: item.Key.split('.').pop().toLowerCase(),
+                  size: formatFileSize(item.Size),
+                  date: new Date(item.LastModified).toLocaleDateString()
+                };
+              }
+            })
+        );
+      } else {
+        // Handle all other sections
+        const params = { Bucket: CONFIG.bucketName, Prefix: CONFIG.folderPaths[sectionId] };
+        const data = await s3.listObjectsV2(params).promise();
+        
+        items = await Promise.all(
+          data.Contents
+            .filter(item => !item.Key.endsWith('/'))
+            .map(async item => {
+              try {
+                const headData = await s3.headObject({ Bucket: CONFIG.bucketName, Key: item.Key }).promise();
+                const meta = headData.Metadata || {};
+                
+                const title = getMetaValue(headData, ['x-amz-meta-title']) || extractTitleFromKey(item.Key);
+                const author = getMetaValue(headData, ['x-amz-meta-author']) || "Unknown Author";
+                const studentId = getMetaValue(headData, ['x-amz-meta-studentid']) || "N/A";
+                const supervisor = getMetaValue(headData, ['x-amz-meta-supervisor']) || "Dr. Unknown";
+                const department = getMetaValue(headData, ['x-amz-meta-department']) || "Unknown Department";
+                const category = getMetaValue(headData, ['x-amz-meta-category']) || "General";
+                const abstract = getMetaValue(headData, ['x-amz-meta-abstract']) || `${title} is available.`;
+                
+                return {
+                  key: item.Key,
+                  title,
+                  author,
+                  studentId,
+                  supervisor,
+                  department,
+                  category,
+                  abstract,
+                  pdfUrl: generatePresignedUrl(item.Key),
+                  resourceUrl: generatePresignedUrl(item.Key),
+                  type: item.Key.split('.').pop().toLowerCase(),
+                  size: formatFileSize(item.Size),
+                  date: new Date(item.LastModified).toLocaleDateString(),
+                  section: sectionId
+                };
+              } catch (err) {
+                return {
+                  key: item.Key,
+                  title: extractTitleFromKey(item.Key),
+                  author: "Unknown Author",
+                  studentId: "N/A",
+                  supervisor: "Dr. Unknown",
+                  department: "Unknown Department",
+                  category: "General",
+                  abstract: `${extractTitleFromKey(item.Key)} is available.`,
+                  pdfUrl: generatePresignedUrl(item.Key),
+                  resourceUrl: generatePresignedUrl(item.Key),
+                  type: item.Key.split('.').pop().toLowerCase(),
+                  size: formatFileSize(item.Size),
+                  date: new Date(item.LastModified).toLocaleDateString(),
+                  section: sectionId
+                };
+              }
+            })
+        );
+      }
+      
+      sectionDataCache[sectionId] = items;
+      renderGrid(sectionId, items);
+    } catch (err) {
+      console.error(`Error loading ${sectionId} data:`, err);
+      const errorMsg = sectionId === 'journals' ? 
+        'Failed to load journals. Please try again later.' :
+        `Failed to load ${sectionId.replace(/-/g, ' ')}. Please try again later.`;
+      grid.innerHTML = `<p class="no-results">${errorMsg}</p>`;
+    }
+  }
+
+  // Render the resource grid (updated for journal sections)
+  function renderGrid(sectionId, items) {
+    const grid = document.getElementById(`grid-${sectionId}`);
+    if (!grid) return;
+    
+    if (!items || items.length === 0) {
+      grid.innerHTML = '<p class="no-results">No resources found.</p>';
+      return;
+    }
+    
+    let html = '';
+    
+    if (sectionId === 'journals') {
+      // Render dynamic journals as thumbnails
+      items.forEach(item => {
+        html += `
+          <div class="thumbnail" onclick="openDocumentModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+            <div class="pdf-thumbnail">
+              <canvas id="canvas-${item.key.replace(/[^a-zA-Z0-9]/g, '-')}" data-pdfurl="${item.pdfUrl}"></canvas>
+              <div class="pdf-icon-overlay">
+                <i class="fas fa-file-pdf"></i>
+              </div>
+            </div>
+            <div class="thumbnail-info">
+              <div class="book-title">${item.title}</div>
+              <div class="book-author">${item.author}</div>
+            </div>
+          </div>`;
+      });
+    } 
+    else if (sectionId === 'external-videos') {
+      // External videos (YouTube)
+      items.forEach(item => {
+        html += `
+          <div class="thumbnail" onclick="openYouTubeModal(${JSON.stringify(item)})">
+            <div class="video-thumbnail">
+              <img src="${item.thumbnail}" alt="YouTube Thumbnail" />
+              <div class="play-button"><i class="fas fa-play"></i></div>
+            </div>
+            <div class="thumbnail-info">
+              <div class="book-title">${item.title}</div>
+            </div>
+          </div>`;
+      });
+    } 
+    else if (sectionId === 'internal-videos') {
+      // Internal videos (MP4)
+      items.forEach(item => {
+        html += `
+          <div class="thumbnail">
+            <video controls poster="oxford.png" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; aspect-ratio: 16/9;">
+              <source src="${item.resourceUrl}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div class="thumbnail-info">
+              <div class="book-title">${item.title}</div>
+            </div>
+          </div>`;
+      });
+    } 
+    else if (sectionId === 'projects') {
+      // Student projects with color palette
+      const COLOR_PALETTES = ['#2ecc71', '#f1c40f', '#3498db', '#FF8C00', '#8b4513'];
+      
+      items.forEach((item, index) => {
+        const color = COLOR_PALETTES[index % COLOR_PALETTES.length];
+        html += `
+          <div class="thumbnail" onclick="openProjectModal(${JSON.stringify(item).replace(/"/g, '&quot;')}, '${color}')">
+            <div class="thumbnail-cover">
+              <div class="cover-background" style="background:${color};"></div>
+              <div class="cover-overlay"></div>
+              <div class="cover-content">
+                <img src="download.jpg" alt="University Logo" class="project-logo"/>
+                <div class="cover-title">${item.title}</div>
+                <div class="cover-by">BY</div>
+                <div class="cover-author">${item.author}</div>
+                <div class="cover-id">${item.studentId}</div>
+              </div>
+            </div>
+            <div class="thumbnail-info">
+              <div class="book-title">${item.title}</div>
+              <div class="book-student-id">${item.studentId}</div>
+            </div>
+          </div>`;
+      });
+    } 
+    else {
+      // All other sections (PDFs with first page preview)
+      items.forEach(item => {
+        html += `
+          <div class="thumbnail" onclick="openDocumentModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+            <div class="pdf-thumbnail">
+              <canvas id="canvas-${item.key.replace(/[^a-zA-Z0-9]/g, '-')}" data-pdfurl="${item.pdfUrl}"></canvas>
+              <div class="pdf-icon-overlay">
+                <i class="fas fa-file-pdf"></i>
+              </div>
+            </div>
+            <div class="thumbnail-info">
+              <div class="book-title">${item.title}</div>
+              <div class="book-author">${item.author}</div>
+            </div>
+          </div>`;
+      });
+    }
+    
+    grid.innerHTML = html;
+
+    // Generate PDF thumbnails for sections that need them
+    if (!['projects', 'internal-videos', 'external-videos'].includes(sectionId)) {
+      document.querySelectorAll('.pdf-thumbnail canvas').forEach(canvas => {
+        const pdfUrl = canvas.dataset.pdfurl;
+        if (pdfUrl) {
+          generatePdfThumbnail(pdfUrl, canvas);
+        }
+      });
+    }
+  }
+
+  // Filter resources
+  function filterResources(sectionId) {
+    if (sectionId === 'ai-tools' || sectionId === 'journal-resources') {
+      return;
+    }
+
+    const term = document.getElementById(`search-${sectionId}`).value.toLowerCase();
+    const filtered = sectionDataCache[sectionId].filter(item =>
+      item.title?.toLowerCase().includes(term) ||
+      item.author?.toLowerCase().includes(term) ||
+      (item.studentId?.toLowerCase().includes(term)) ||
+      (item.supervisor?.toLowerCase().includes(term)) ||
+      (item.department?.toLowerCase().includes(term)) ||
+      (item.abstract?.toLowerCase().includes(term))
+    );
+    renderGrid(sectionId, filtered);
+  }
+
+  // Navigation scroll behavior
+  let lastScrollTop = 0;
+  window.addEventListener("scroll", function() {
+    const navbar = document.querySelector('.nav-container');
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    if (scrollTop > lastScrollTop) {
+      // Scrolling down – hide nav
+      navbar.style.transform = "translateY(-100%)";
+    } else {
+      // Scrolling up – show nav
+      navbar.style.transform = "translateY(0)";
+    }
+    lastScrollTop = scrollTop;
+  });
+
+  // Modal functions (unchanged)
+  function openProjectModal(item, color) {
+    document.getElementById('modal-title').textContent = item.title;
+    document.getElementById('modal-abstract').innerHTML = `
+      <h3>Project Details</h3>
+      <p><strong>Author:</strong> ${item.author}</p>
+      <p><strong>Student ID:</strong> ${item.studentId}</p>
+      <p><strong>Supervisor:</strong> ${item.supervisor}</p>
+      <p><strong>Department:</strong> ${item.department}</p>
+      <h3>Abstract</h3>
+      <p>${item.abstract}</p>
+    `;
+    document.getElementById('modal-open-pdf').onclick = () => window.open(item.pdfUrl, '_blank');
+
+    const canvas = document.getElementById('modal-cover-canvas');
+    canvas.width = 200;
+    canvas.height = 300;
+    
+    if (!thumbnailCache[item.pdfUrl]) {
+      generatePdfThumbnail(item.pdfUrl, canvas);
+    } else {
+      const img = new Image();
+      img.src = thumbnailCache[item.pdfUrl];
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+      };
+    }
+
+    document.getElementById('modal').classList.add('show');
+  }
+
+  function openDocumentModal(item) {
+    document.getElementById('modal-title').textContent = item.title;
+    document.getElementById('modal-abstract').innerHTML = `
+      <h3>Document Details</h3>
+      <p><strong>Author:</strong> ${item.author}</p>
+      ${item.category ? `<p><strong>Category:</strong> ${item.category}</p>` : ''}
+      ${item.date ? `<p><strong>Date:</strong> ${item.date}</p>` : ''}
+      ${item.abstract ? `<h3>Abstract</h3><p>${item.abstract}</p>` : ''}
+    `;
+    document.getElementById('modal-open-pdf').onclick = () => window.open(item.pdfUrl, '_blank');
+
+    const canvas = document.getElementById('modal-cover-canvas');
+    canvas.width = 200;
+    canvas.height = 300;
+    
+    if (!thumbnailCache[item.pdfUrl]) {
+      generatePdfThumbnail(item.pdfUrl, canvas);
+    } else {
+      const img = new Image();
+      img.src = thumbnailCache[item.pdfUrl];
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+      };
+    }
+
+    document.getElementById('modal').classList.add('show');
+  }
+
+  function openYouTubeModal(item) {
+    document.getElementById('youtube-title').textContent = item.title;
+    const iframe = document.getElementById('youtube-player');
+    iframe.src = `https://www.youtube.com/embed/${getYouTubeId(item.url)}?autoplay=1`;
+    document.getElementById('youtube-modal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('show');
+    document.getElementById('youtube-modal').classList.remove('show');
+    const iframe = document.getElementById('youtube-player');
+    if (iframe) iframe.src = '';
+  }
+
+  // Initialize the page
+  document.addEventListener('DOMContentLoaded', () => {
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    showSection('projects');
+    
+    // Load all sections data except static resources
+    [
+      'books',
+      'journals',
+      'internal-videos',
+      'external-videos',
+      'thesis',
+      'research',
+      'community'
+    ].forEach(loadSectionData);
+  });
+
+  // Event listeners for modals
+  document.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', closeModal));
+  document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+  document.getElementById('youtube-modal').addEventListener('click', e => { if (e.target.id === 'youtube-modal') closeModal(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+<script>
+  // Handle file upload display
+  document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('project-file');
+    const fileInfo = document.getElementById('file-info');
+    
+    uploadArea.addEventListener('click', () => fileInput.click());
+    
+    fileInput.addEventListener('change', function() {
+      if (this.files.length > 0) {
+        fileInfo.textContent = this.files[0].name;
+        uploadArea.style.borderColor = 'var(--primary-green)';
+      } else {
+        fileInfo.textContent = 'No file selected';
+        uploadArea.style.borderColor = '#ddd';
+      }
+    });
+    
+    // Handle drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = 'var(--primary-green)';
+      uploadArea.style.backgroundColor = 'rgba(46, 125, 50, 0.05)';
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.style.borderColor = '#ddd';
+      uploadArea.style.backgroundColor = 'transparent';
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#ddd';
+      uploadArea.style.backgroundColor = 'transparent';
+      
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        fileInfo.textContent = e.dataTransfer.files[0].name;
+        uploadArea.style.borderColor = 'var(--primary-green)';
+      }
+    });
+    
+    // Form submission handling
+    document.getElementById('project-submission-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Here you would normally handle the form submission to your backend
+      alert('Project submitted successfully! (This is a demo)');
+      this.reset();
+      fileInfo.textContent = 'No file selected';
+      uploadArea.style.borderColor = '#ddd';
+    });
+  });
+</script>
+<!-- Add this JavaScript to handle the accordion and filtering -->
+<script>
+  // Accordion functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordions = document.querySelectorAll('.accordion-header');
+    
+    accordions.forEach(accordion => {
+      accordion.addEventListener('click', function() {
+        const content = this.nextElementSibling;
+        const isActive = content.classList.contains('active');
+        
+        // Close all accordions
+        document.querySelectorAll('.accordion-content').forEach(acc => {
+          acc.classList.remove('active');
+          acc.previousElementSibling.querySelector('.toggle-icon i').className = 'fas fa-chevron-down';
+        });
+        
+        // Open clicked accordion if it wasn't active
+        if (!isActive) {
+          content.classList.add('active');
+          this.querySelector('.toggle-icon i').className = 'fas fa-chevron-up';
+        }
+      });
+    });
+  });
+
+  // Filter channels by search term
+  function filterChannels() {
+    const searchTerm = document.getElementById('search-channels').value.toLowerCase();
+    const categories = document.querySelectorAll('.category-accordion');
+    
+    let anyVisible = false;
+    
+    categories.forEach(category => {
+      const categoryName = category.querySelector('.accordion-header').textContent.toLowerCase();
+      const channels = category.querySelectorAll('.channel-card');
+      let hasVisibleChannels = false;
+      
+      channels.forEach(channel => {
+        const channelName = channel.querySelector('h3').textContent.toLowerCase();
+        const channelDesc = channel.querySelector('p').textContent.toLowerCase();
+        
+        if (channelName.includes(searchTerm) || 
+            channelDesc.includes(searchTerm) || 
+            categoryName.includes(searchTerm)) {
+          channel.style.display = 'flex';
+          hasVisibleChannels = true;
+          anyVisible = true;
+        } else {
+          channel.style.display = 'none';
+        }
+      });
+      
+      // Show/hide entire category based on matches
+      category.style.display = hasVisibleChannels ? 'block' : 'none';
+    });
+    
+    // Show message if no results
+    const noResults = document.querySelector('.no-results-message');
+    if (!anyVisible) {
+      if (!noResults) {
+        const message = document.createElement('p');
+        message.className = 'no-results-message';
+        message.textContent = 'No channels found matching your search';
+        message.style.padding = '2rem';
+        message.style.textAlign = 'center';
+        message.style.color = '#666';
+        document.querySelector('.channels-container').appendChild(message);
+      }
+    } else if (noResults) {
+      noResults.remove();
+    }
+  }
+</script>
+<script>
+  document.addEventListener('copy', (e) => e.preventDefault());
+  document.addEventListener('cut', (e) => e.preventDefault());
+</script>
+<script>
+  // Disable right click
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+
+  // Disable text selection
+  document.addEventListener('selectstart', function (e) {
+    e.preventDefault();
+  });
+
+  // Disable dragging (images, links)
+  document.addEventListener('dragstart', function (e) {
+    e.preventDefault();
+  });
+
+  // Disable Ctrl + U / Ctrl + S / F12 / Ctrl+Shift+I
+  document.addEventListener('keydown', function (e) {
+    if (
+      (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'a')) || // Ctrl+U, Ctrl+S, Ctrl+A
+      (e.key === 'F12') || // F12
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) // DevTools
+    ) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+</body>
+</html>
