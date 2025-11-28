@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SRIMI E-Library - Sa'adatu Rimi College of Education</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #2e7d32; /* Green */
+      --secondary-color: #1b5e20; /* Dark Green */
+      --accent-color: #4caf50; /* Light Green */
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --gray-color: #6c757d;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+      --thumbnail-width: 170px;
+      --thumbnail-height: 230px;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7ff;
+      color: var(--dark-color);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-top: 140px; /* To account for fixed header */
+    }
+    .container {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 1rem 15px;
+      flex: 1;
+    }
+    
+    /* ===== Redesigned Fixed Header Styles ===== */
+/* ===== Redesigned Fixed Header Styles ===== */
+.header {
+  background: linear-gradient(135deg, #2e7d32, #1b5e20); /* Dark green gradient */
+  color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: fixed;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  z-index: 1000;
+  padding: 0.8rem 0;
+  transition: background-color 0.3s ease;
+}
+
+.header-container {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Responsive wrapping for smaller screens */
+}
+
+.college-logo {
+  height: 60px;
+  transition: transform 0.3s ease;
+}
+.college-logo:hover {
+  transform: scale(1.05);
+}
+
+.college-info .college-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.2rem;
+}
+
+.college-info .library-name {
+  font-size: 1rem;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+.current-date {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.8rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: transparent;
+  padding: 0;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.15); /* Light blackish/white hover */
+  transform: translateY(-2px);
+}
+    /* Footer Styles */
+    .footer {
+      background: var(--dark-color);
+      color: white;
+      padding: 2rem 0;
+      margin-top: 3rem;
+    }
+    .footer-container {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .footer-logo {
+      height: 70px;
+      margin-bottom: 1rem;
+    }
+    .footer-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: var(--light-color);
+    }
+    .footer-links {
+      list-style: none;
+    }
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .footer-links a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+    .copyright {
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+    
+    /* Search Bar */
+    .search-container {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .search-container input {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      box-shadow: var(--box-shadow);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    .search-container input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.3);
+    }
+    .search-container i {
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-color);
+    }
+    
+    /* Gallery Styles - Image only with hover title/author */
+    .gallery-section {
+      margin: 3rem 0;
+    }
+    .gallery-container {
+      position: relative;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
+      padding: 20px 0;
+    }
+    .thumbnail {
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+      height: 320px;
+    }
+    .thumbnail:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    .thumbnail-img-container {
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .thumbnail-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+    .thumbnail:hover .thumbnail-img {
+      transform: scale(1.05);
+    }
+    
+    /* Hover metadata overlay - Only title and author */
+    .thumbnail:hover .thumbnail-hover-info {
+      opacity: 1;
+    }
+    .thumbnail-hover-info {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(27, 94, 32, 0.9);
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 2;
+    }
+    .hover-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .hover-author {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    /* Recent Books Carousel - Enhanced */
+    .recent-section {
+      margin: 3rem 0;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--secondary-color);
+      position: relative;
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    }
+    .section-title i {
+      margin-right: 0.75rem;
+      color: var(--accent-color);
+    }
+    .recent-carousel-container {
+      position: relative;
+      overflow: hidden;
+      padding: 10px 0;
+    }
+    .recent-carousel {
+      display: flex;
+      gap: 30px;
+      padding: 20px 0;
+      animation: scroll 30s linear infinite;
+    }
+    .recent-carousel:hover {
+      animation-play-state: paused;
+    }
+    .recent-book {
+      flex: 0 0 280px;
+      height: 380px;
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      position: relative;
+    }
+    .recent-book:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    .recent-book-img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+    .recent-book:hover .recent-book-img {
+      transform: scale(1.05);
+    }
+    
+    /* Hover info for recent books */
+    .recent-book:hover .recent-book-hover-info {
+      opacity: 1;
+    }
+    .recent-book-hover-info {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(27, 94, 32, 0.9);
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 2;
+    }
+    .recent-hover-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .recent-hover-author {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-1 * (280px + 30px) * 5)); }
+    }
+    
+    /* Free Resources Section - Enhanced with actual site colors */
+    .resources-section {
+      margin: 3rem 0;
+    }
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+    }
+    .resource-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1.8rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .resource-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .resource-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .resource-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .resource-desc {
+      font-size: 0.95rem;
+      color: var(--gray-color);
+      margin-bottom: 1.5rem;
+      flex: 1;
+    }
+    .resource-link {
+      display: inline-flex;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      margin-top: 0.5rem;
+      transition: var(--transition);
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 500;
+      width: fit-content;
+    }
+    .resource-link i {
+      margin-right: 0.5rem;
+    }
+    .resource-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Individual resource card colors */
+    .resource-card[data-resource="pdfdrive"] {
+      border-top: 4px solid #e74c3c;
+    }
+    .resource-card[data-resource="pdfdrive"] .resource-icon {
+      color: #e74c3c;
+    }
+    .resource-card[data-resource="pdfdrive"] .resource-name {
+      color: #e74c3c;
+    }
+    .resource-card[data-resource="pdfdrive"] .resource-link {
+      background: #e74c3c;
+    }
+    
+    .resource-card[data-resource="gutenberg"] {
+      border-top: 4px solid #3498db;
+    }
+    .resource-card[data-resource="gutenberg"] .resource-icon {
+      color: #3498db;
+    }
+    .resource-card[data-resource="gutenberg"] .resource-name {
+      color: #3498db;
+    }
+    .resource-card[data-resource="gutenberg"] .resource-link {
+      background: #3498db;
+    }
+    
+    .resource-card[data-resource="openlibrary"] {
+      border-top: 4px solid #f39c12;
+    }
+    .resource-card[data-resource="openlibrary"] .resource-icon {
+      color: #f39c12;
+    }
+    .resource-card[data-resource="openlibrary"] .resource-name {
+      color: #f39c12;
+    }
+    .resource-card[data-resource="openlibrary"] .resource-link {
+      background: #f39c12;
+    }
+    
+    .resource-card[data-resource="free-ebooks"] {
+      border-top: 4px solid #2ecc71;
+    }
+    .resource-card[data-resource="free-ebooks"] .resource-icon {
+      color: #2ecc71;
+    }
+    .resource-card[data-resource="free-ebooks"] .resource-name {
+      color: #2ecc71;
+    }
+    .resource-card[data-resource="free-ebooks"] .resource-link {
+      background: #2ecc71;
+    }
+    
+    .resource-card[data-resource="manybooks"] {
+      border-top: 4px solid #9b59b6;
+    }
+    .resource-card[data-resource="manybooks"] .resource-icon {
+      color: #9b59b6;
+    }
+    .resource-card[data-resource="manybooks"] .resource-name {
+      color: #9b59b6;
+    }
+    .resource-card[data-resource="manybooks"] .resource-link {
+      background: #9b59b6;
+    }
+    
+    /* Dailies & Magazines Section with publication colors */
+    .publications-section {
+      margin: 3rem 0;
+    }
+    .publications-tabs {
+      display: flex;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 1.5rem;
+    }
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--gray-color);
+      position: relative;
+      transition: var(--transition);
+    }
+    .tab-btn.active {
+      color: var(--primary-color);
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary-color);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .publications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .publication-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .publication-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    .publication-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+      color: white;
+    }
+    .publication-info {
+      flex: 1;
+    }
+    .publication-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .publication-country {
+      font-size: 0.85rem;
+      color: var(--gray-color);
+    }
+    
+    /* Publication-specific colors */
+    .publication-card[data-publication="dailytrust"] .publication-icon {
+      background: #006838; /* Daily Trust green */
+    }
+    .publication-card[data-publication="punch"] .publication-icon {
+      background: #e31837; /* Punch red */
+    }
+    .publication-card[data-publication="thisday"] .publication-icon {
+      background: #003366; /* ThisDay blue */
+    }
+    .publication-card[data-publication="guardianng"] .publication-icon {
+      background: #005b82; /* Guardian Nigeria blue */
+    }
+    .publication-card[data-publication="nytimes"] .publication-icon {
+      background: #000000; /* NY Times black */
+    }
+    .publication-card[data-publication="mailguardian"] .publication-icon {
+      background: #e3120b; /* Mail & Guardian red */
+    }
+    .publication-card[data-publication="washingtonpost"] .publication-icon {
+      background: #231f20; /* Washington Post black */
+    }
+    .publication-card[data-publication="tes"] .publication-icon {
+      background: #e32137; /* TES red */
+    }
+    .publication-card[data-publication="educationtimes"] .publication-icon {
+      background: #ff6600; /* Education Times orange */
+    }
+    .publication-card[data-publication="guardianuk"] .publication-icon {
+      background: #052962; /* Guardian UK blue */
+    }
+    .publication-card[data-publication="ststraitstimes"] .publication-icon {
+      background: #cc0000; /* Straits Times red */
+    }
+    .publication-card[data-publication="vanguard"] .publication-icon {
+      background: #1a3e72; /* Vanguard blue */
+    }
+    .publication-card[data-publication="leadership"] .publication-icon {
+      background: #003366; /* Leadership blue */
+    }
+    
+    /* Magazine colors */
+    .publication-card[data-publication="forbesafrica"] .publication-icon {
+      background: #3a3a3a; /* Forbes Africa dark gray */
+    }
+    .publication-card[data-publication="completesports"] .publication-icon {
+      background: #ff0000; /* Complete Sports red */
+    }
+    .publication-card[data-publication="newafricanwoman"] .publication-icon {
+      background: #e3120b; /* New African Woman red */
+    }
+    .publication-card[data-publication="exquisite"] .publication-icon {
+      background: #000000; /* Exquisite black */
+    }
+    .publication-card[data-publication="businessday"] .publication-icon {
+      background: #003366; /* BusinessDay blue */
+    }
+    .publication-card[data-publication="ovation"] .publication-icon {
+      background: #e31837; /* Ovation red */
+    }
+    .publication-card[data-publication="economist"] .publication-icon {
+      background: #e3120b; /* Economist red */
+    }
+    
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    .modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      background-color: white;
+      border-radius: var(--border-radius);
+      width: 90%;
+      max-width: 1200px;
+      max-height: 90vh;
+      padding: 2rem;
+      position: relative;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-color);
+    }
+    .modal-close:hover {
+      color: var(--dark-color);
+    }
+    .modal-body {
+      display: flex;
+      gap: 2rem;
+    }
+    .modal-cover-container {
+      width: 30%;
+      aspect-ratio: 2/3;
+      background: var(--light-color);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: var(--box-shadow);
+    }
+    .modal-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+    .modal-cover:hover {
+      transform: scale(1.03);
+    }
+    .modal-details {
+      flex: 1;
+    }
+    .modal-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 1rem;
+    }
+    .modal-author {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+    }
+    .modal-meta {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      color: var(--gray-color);
+    }
+    .meta-item i {
+      margin-right: 0.5rem;
+      color: var(--primary-color);
+    }
+    .modal-abstract {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      background: rgba(46, 125, 50, 0.05);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--primary-color);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .modal-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2rem;
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+      color: white;
+      font-weight: 600;
+      border-radius: 50px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+    .modal-action.secondary {
+      background: white;
+      color: rgba(104, 103, 103, 0.137);
+      border: 1px solid var(--primary-color);
+    }
+    .modal-action:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
+    }
+    .modal-action i {
+      margin-right: 0.5rem;
+    }
+    
+    /* Login Modal */
+    .login-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    .login-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .login-content {
+      background-color: white;
+      border-radius: var(--border-radius);
+      width: 90%;
+      max-width: 500px;
+      padding: 2rem;
+      position: relative;
+    }
+    .login-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-color);
+    }
+    .login-close:hover {
+      color: var(--dark-color);
+    }
+    .login-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--secondary-color);
+      text-align: center;
+    }
+    .login-form-group {
+      margin-bottom: 1.5rem;
+    }
+    .login-form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    .login-form-group input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    .login-form-group input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+    }
+    .login-submit {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .login-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
+    }
+    .login-error {
+      color: #dc3545;
+      margin-top: 1rem;
+      text-align: center;
+      display: none;
+    }
+    
+    /* Floating Action Button */
+    .fab {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 100;
+    }
+    .fab:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0);
+    }
+    
+    /* Loading State */
+    .loading {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 3rem;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(46, 125, 50, 0.2);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .modal-body {
+        flex-direction: column;
+      }
+      .modal-cover-container {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 2rem;
+      }
+    }
+    @media (max-width: 768px) {
+      body {
+        padding-top: 120px;
+      }
+      .mobile-menu-btn {
+        display: block;
+      }
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        background: transparent;
+        padding: 0;
+      }
+      .nav-menu.show {
+        display: flex;
+      }
+      .nav-link {
+        margin: 0.25rem 0;
+        padding: 0.75rem;
+        background: rgba(0, 0, 0, 0.1);
+      }
+      .logo-section {
+        flex-wrap: wrap;
+      }
+      .college-name {
+        font-size: 1.2rem;
+      }
+      .current-date {
+        display: none;
+      }
+      .modal-title {
+        font-size: 1.5rem;
+      }
+      .recent-carousel {
+        gap: 20px;
+      }
+      .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+      }
+      .thumbnail {
+        height: 280px;
+      }
+      .thumbnail-img-container {
+        height: 280px;
+      }
+      .recent-book {
+        flex: 0 0 220px;
+        height: 320px;
+      }
+    }
+    @media (max-width: 480px) {
+      body {
+        padding-top: 110px;
+      }
+      .resources-grid, .publications-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-actions {
+        flex-direction: column;
+      }
+      .modal-action {
+        width: 100%;
+        text-align: center;
+      }
+      .section-title {
+        font-size: 1.5rem;
+      }
+      .publications-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+      }
+      .tab-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+
+  
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo-section">
+        <div style="display: flex; align-items: center;">
+          <img src="download.jpg" alt="College Logo" class="college-logo">
+          <div class="college-info">
+            <div class="college-name">        Sa'adatu Rimi College of Education</div>
+            <p>         A Citadel of Teacher Training Excellence</p>
+          </div>
+        </div>
+        <div class="current-date" id="currentDate"></div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <nav class="nav-menu" id="navMenu">
+       <a href="index.html" class="nav-link active">Home</a>
+        <a href="#" class="nav-link">eBooks</a>
+        <a href="#" class="nav-link" id="privateReposLink">Private Repositories</a>
+      </nav>
+    </div>
+  </header>
+<br>
+<nl>
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Search books by title or author..." />
+      <i class="fas fa-search"></i>
+    </div>
+    
+    <!-- eBook Gallery - Redesigned -->
+    <section class="gallery-section">
+      <h2 class="section-title"><i class="fas fa-book-open"></i> Our Collection</h2>
+      <div class="gallery-container">
+        <div id="gallery" class="gallery">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading books...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+     <div class="container">
+    <!-- Recent Books Section -->
+    <section class="recent-section">
+      <h2 class="section-title"><i class="fas fa-clock"></i> Recently Added</h2>
+      <div class="recent-carousel-container">
+        <div class="recent-carousel" id="recentCarousel">
+          <div class="book-card">
+            <div class="book-cover"><i class="fas fa-book"></i></div>
+            <div class="book-info">
+              <div class="book-title">Principles of Physics</div>
+              <div class="book-author">David Halliday</div>
+            </div>
+          </div>
+          <div class="book-card">
+            <div class="book-cover"><i class="fas fa-book"></i></div>
+            <div class="book-info">
+              <div class="book-title">Organic Chemistry</div>
+              <div class="book-author">Jonathan Clayden</div>
+            </div>
+          </div>
+          <div class="book-card">
+            <div class="book-cover"><i class="fas fa-book"></i></div>
+            <div class="book-info">
+              <div class="book-title">Calculus Made Easy</div>
+              <div class="book-author">Silvanus P. Thompson</div>
+            </div>
+          </div>
+          <div class="book-card">
+            <div class="book-cover"><i class="fas fa-book"></i></div>
+            <div class="book-info">
+              <div class="book-title">Modern Biology</div>
+              <div class="book-author">Postlethwait & Hopson</div>
+            </div>
+          </div>
+          <div class="book-card">
+            <div class="book-cover"><i class="fas fa-book"></i></div>
+            <div class="book-info">
+              <div class="book-title">History of Africa</div>
+              <div class="book-author">Kevin Shillington</div>
+            </div>
+          </div>
+          <div class="book-card">
+            <div class="book-cover"><i class="fas fa-book"></i></div>
+            <div class="book-info">
+              <div class="book-title">Educational Psychology</div>
+              <div class="book-author">John W. Santrock</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="nav-btn active"></button>
+        <button class="nav-btn"></button>
+        <button class="nav-btn"></button>
+      </div>
+    </section>
+    
+   <!-- Dailies & Magazines Section -->
+<section class="publications-section">
+  <h2 class="section-title"><i class="fas fa-newspaper"></i> Publications</h2>
+  <div class="publications-tabs">
+    <button class="tab-btn active" data-tab="dailies">Dailies</button>
+    <button class="tab-btn" data-tab="magazines">Magazines</button>
+  </div>
+
+  <div class="tab-content active" id="dailies">
+    <div class="publications-grid">
+      <!-- Daily Trust -->
+      <a href="https://dailytrust.com"  target="_blank" class="publication-card" data-publication="dailytrust">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Daily Trust</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+
+      <!-- The Punch -->
+      <a href="https://punchng.com"  target="_blank" class="publication-card" data-publication="punch">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">The Punch</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+
+      <!-- ThisDay -->
+      <a href="https://thisdaylive.com"  target="_blank" class="publication-card" data-publication="thisday">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">ThisDay</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+
+      <!-- The Guardian Nigeria -->
+      <a href="https://guardian.ng"  target="_blank" class="publication-card" data-publication="guardianng">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">The Guardian Nigeria</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+
+      <!-- New York Times -->
+      <a href="https://www.nytimes.com"  target="_blank" class="publication-card" data-publication="nytimes">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">The New York Times</div>
+          <div class="publication-country">United States</div>
+        </div>
+      </a>
+
+      <!-- Mail & Guardian -->
+      <a href="https://mg.co.za"  target="_blank" class="publication-card" data-publication="mailguardian">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Mail & Guardian</div>
+          <div class="publication-country">South Africa</div>
+        </div>
+      </a>
+
+      <!-- Washington Post -->
+      <a href="https://www.washingtonpost.com"  target="_blank" class="publication-card" data-publication="washingtonpost">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">The Washington Post</div>
+          <div class="publication-country">United States</div>
+        </div>
+      </a>
+
+      <!-- The Times Educational Supplement -->
+      <a href="https://www.tes.com"  target="_blank" class="publication-card" data-publication="tes">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">The Times Educational Supplement</div>
+          <div class="publication-country">United Kingdom</div>
+        </div>
+      </a>
+
+      <!-- Education Times -->
+      <a href="https://www.educationtimes.in"  target="_blank" class="publication-card" data-publication="educationtimes">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Education Times</div>
+          <div class="publication-country">India</div>
+        </div>
+      </a>
+
+      <!-- The Guardian UK -->
+      <a href="https://www.theguardian.com"  target="_blank" class="publication-card" data-publication="guardianuk">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">The Guardian</div>
+          <div class="publication-country">United Kingdom</div>
+        </div>
+      </a>
+
+      <!-- Straits Times Schools -->
+      <a href="https://www.straitstimes.com"  target="_blank" class="publication-card" data-publication="ststraitstimes">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">The Straits Times Schools</div>
+          <div class="publication-country">Singapore</div>
+        </div>
+      </a>
+
+      <!-- Vanguard -->
+      <a href="https://www.vanguardngr.com"  target="_blank" class="publication-card" data-publication="vanguard">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Vanguard</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+
+      <!-- Leadership -->
+      <a href="https://leadership.ng"  target="_blank" class="publication-card" data-publication="leadership">
+        <div class="publication-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Leadership</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="tab-content" id="magazines">
+    <div class="publications-grid">
+      <!-- Forbes Africa -->
+      <a href="https://forbesafrica.com"  target="_blank" class="publication-card" data-publication="forbesafrica">
+        <div class="publication-icon"><i class="fas fa-book-open"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Forbes Africa</div>
+          <div class="publication-country">Africa</div>
+        </div>
+      </a>
+
+      <!-- Complete Sports -->
+      <a href="https://completesports.com"  target="_blank" class="publication-card" data-publication="completesports">
+        <div class="publication-icon"><i class="fas fa-book-open"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Complete Sports</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+
+      <!-- New African Woman -->
+      <a href="https://newafricanwoman.com"  target="_blank" class="publication-card" data-publication="newafricanwoman">
+        <div class="publication-icon"><i class="fas fa-book-open"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">New African Woman</div>
+          <div class="publication-country">Africa</div>
+        </div>
+      </a>
+
+      <!-- Exquisite Magazine -->
+      <a href="https://exquisitemagazine.tv"  target="_blank" class="publication-card" data-publication="exquisite">
+        <div class="publication-icon"><i class="fas fa-book-open"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Exquisite Magazine</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+
+      <!-- BusinessDay Magazine -->
+      <a href="https://www.businessday.ng"  target="_blank" class="publication-card" data-publication="businessday">
+        <div class="publication-icon"><i class="fas fa-book-open"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">BusinessDay Magazine</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+
+      <!-- Ovation International -->
+      <a href="https://ovationmagazine.com"  target="_blank" class="publication-card" data-publication="ovation">
+        <div class="publication-icon"><i class="fas fa-book-open"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">Ovation International</div>
+          <div class="publication-country">International</div>
+        </div>
+      </a>
+
+      <!-- The Economist Nigeria -->
+      <a href="https://www.economist.com"  target="_blank" class="publication-card" data-publication="economist">
+        <div class="publication-icon"><i class="fas fa-book-open"></i></div>
+        <div class="publication-info">
+          <div class="publication-name">The Economist Nigeria</div>
+          <div class="publication-country">Nigeria</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+    
+    <!-- Free Resources Section - Enhanced -->
+    <section class="resources-section">
+      <h2 class="section-title"><i class="fas fa-external-link-alt"></i> Our Core Accredited Partners</h2>
+      <div class="resources-grid">
+        <div class="resource-card" data-resource="pdfdrive">
+          <div class="resource-icon"><i class="fas fa-book"></i></div>
+          <h3 class="resource-name">PDF Drive</h3>
+          <p class="resource-desc">One of the largest free eBook libraries with millions of titles across all subjects and categories.</p>
+          <a href="https://www.pdfdrive.com/" class="resource-link" target="_blank">
+            <i class="fas fa-external-link-alt"></i> Visit Site
+          </a>
+        </div>
+        <div class="resource-card" data-resource="gutenberg">
+          <div class="resource-icon"><i class="fas fa-book"></i></div>
+          <h3 class="resource-name">Project Gutenberg</h3>
+          <p class="resource-desc">Over 60,000 free eBooks, especially classic literature and historical texts in multiple formats.</p>
+          <a href="https://www.gutenberg.org/" class="resource-link" target="_blank">
+            <i class="fas fa-external-link-alt"></i> Visit Site
+          </a>
+        </div>
+        <div class="resource-card" data-resource="openlibrary">
+          <div class="resource-icon"><i class="fas fa-book"></i></div>
+          <h3 class="resource-name">Open Library</h3>
+          <p class="resource-desc">An open, editable library catalog with millions of books available for lending and reading.</p>
+          <a href="https://openlibrary.org/" class="resource-link" target="_blank">
+            <i class="fas fa-external-link-alt"></i> Visit Site
+          </a>
+        </div>
+        <div class="resource-card" data-resource="free-ebooks">
+          <div class="resource-icon"><i class="fas fa-book"></i></div>
+          <h3 class="resource-name">Free-Ebooks.net</h3>
+          <p class="resource-desc">Free eBooks in various categories with a simple signup. Includes fiction, non-fiction, academic and more.</p>
+          <a href="https://www.free-ebooks.net/" class="resource-link" target="_blank">
+            <i class="fas fa-external-link-alt"></i> Visit Site
+          </a>
+        </div>
+        <div class="resource-card" data-resource="manybooks">
+          <div class="resource-icon"><i class="fas fa-book"></i></div>
+          <h3 class="resource-name">ManyBooks</h3>
+          <p class="resource-desc">Curated collection of free eBooks in multiple formats with excellent categorization and search.</p>
+          <a href="https://manybooks.net/" class="resource-link" target="_blank">
+            <i class="fas fa-external-link-alt"></i> Visit Site
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <img src="../logo.svg" alt="College Logo" class="footer-logo">
+        <p>Sa'adatu Rimi College of Education's digital library providing access to quality educational resources.</p>
+      </div>
+      <div>
+        <h3 class="footer-title">Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">eBooks</a></li>
+          <li><a href="#">Private Repositories</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-title">Contact</h3>
+        <ul class="footer-links">
+          <li><i class="fas fa-map-marker-alt"></i> Kano, Nigeria</li>
+          <li><i class="fas fa-phone"></i> +234 123 456 789</li>
+          <li><i class="fas fa-envelope"></i> library@srimi.edu.ng</li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; 2023 Sa'adatu Rimi College of Education. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Book Details Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <div class="modal-body">
+        <div class="modal-cover-container">
+          <img id="modal-cover" class="modal-cover" src="" alt="Book Cover" />
+        </div>
+        <div class="modal-details">
+          <h2 id="modal-title" class="modal-title"></h2>
+          <p id="modal-author" class="modal-author"></p>
+          <div class="modal-meta">
+            <div class="meta-item"><i class="fas fa-book"></i> <span id="modal-pages">250</span> pages</div>
+            <div class="meta-item"><i class="fas fa-calendar-alt"></i> Published <span id="modal-year">2022</span></div>
+            <div class="meta-item"><i class="fas fa-tag"></i> <span id="modal-category">Education</span></div>
+          </div>
+          <p id="modal-abstract" class="modal-abstract"></p>
+          <div class="modal-actions">
+            <a id="modal-action-read" href="#" class="modal-action" target="_blank">
+              <i class="fas fa-book-open"></i> Read Now
+            </a>
+            <button id="modal-action-full" class="modal-action secondary">
+              <i class="fas fa-expand"></i> Full Page View
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="login-modal">
+    <div class="login-content">
+      <button class="login-close">&times;</button>
+      <h2 class="login-title">Private Repository Access</h2>
+      <form id="loginForm">
+        <div class="login-form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required placeholder="Enter your email">
+        </div>
+        <div class="login-form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required placeholder="Enter your password">
+        </div>
+        <button type="submit" class="login-submit">Login</button>
+        <div class="login-error" id="loginError">Invalid email or password. Please try again.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <div class="fab" title="Upload new book">
+    <i class="fas fa-plus"></i>
+  </div>
+<script src="js/b2-client.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
+
+<script>
+    // Initialize PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.worker.min.js';
+
+    // B2Client is already configured in b2-client.js
+    // Cache for book covers
+    const coverCache = new Map();
+    const gallery = document.getElementById('gallery');
+    const searchInput = document.getElementById('search');
+    const modal = document.getElementById('modal');
+    const modalClose = document.querySelector('.modal-close');
+    const modalTitle = document.getElementById('modal-title');
+    const modalAuthor = document.getElementById('modal-author');
+    const modalAbstract = document.getElementById('modal-abstract');
+    const modalCover = document.getElementById('modal-cover');
+    const modalCoverCanvas = document.getElementById('modal-cover-canvas');
+    const modalActionRead = document.getElementById('modal-action-read');
+    const modalActionFull = document.getElementById('modal-action-full');
+    const loginModal = document.getElementById('loginModal');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const privateReposLink = document.getElementById('privateReposLink');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navMenu = document.getElementById('navMenu');
+    const recentCarousel = document.getElementById('recentCarousel');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const currentDateElement = document.getElementById('currentDate');
+    const fab = document.querySelector('.fab');
+    const pdfFullView = document.getElementById('pdfFullView');
+    const pdfViewerIframe = document.getElementById('pdfViewerIframe');
+    const pdfViewerTitle = document.getElementById('pdfViewerTitle');
+    const pdfViewerClose = document.querySelector('.pdf-viewer-close');
+
+    let books = [];
+    let currentPdfUrl = '';
+
+    // Update current date and time
+    function updateCurrentDateTime() {
+      const now = new Date();
+      const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      currentDateElement.textContent = now.toLocaleDateString('en-US', options);
+    }
+    
+    // Update time every minute
+    updateCurrentDateTime();
+    setInterval(updateCurrentDateTime, 60000);
+
+    // Valid credentials
+    const validCredentials = [
+      { email: 'Yaquba@yajib.uk.co', password: 'Yaq1234567' },
+      { email: 'mmabubakar@yajib.uk.co', password: 'Abu1234567' },
+      { email: 'mabruka@yajib.uk.co', password: 'Mab1234567' }
+    ];
+
+    // Utility Functions
+    function decodeMetadata(value) {
+      if (!value) return '';
+      try {
+        return decodeURIComponent(value);
+      } catch (error) {
+        console.warn('Failed to decode metadata:', value, error);
+        return value;
+      }
+    }
+
+    function getMetaValue(metadata, possibleKeys) {
+      const meta = metadata.Metadata || {};
+      for (const key of possibleKeys) {
+        if (meta[key] !== undefined && meta[key] !== '') {
+          return decodeMetadata(meta[key]);
+        }
+      }
+      return null;
+    }
+
+    async function generatePresignedUrl(key) {
+      return await B2Client.getSignedUrl(key);
+    }
+
+    function extractTitleFromKey(key) {
+      return key.split('/').pop()
+        .replace(/\.pdf$/i, '')
+        .replace(/[_-]/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    // Enhanced PDF thumbnail rendering with canvas support
+    function renderPdfThumbnail(pdfUrl, imgElement, cacheKey, useCanvas = false) {
+      if (!pdfUrl) {
+        showFallbackThumbnail(imgElement, useCanvas);
+        return;
+      }
+
+      // Check cache first
+      if (coverCache.has(cacheKey)) {
+        if (useCanvas && imgElement instanceof HTMLCanvasElement) {
+          const img = new Image();
+          img.onload = () => {
+            const ctx = imgElement.getContext('2d');
+            imgElement.width = img.width;
+            imgElement.height = img.height;
+            ctx.drawImage(img, 0, 0);
+          };
+          img.src = coverCache.get(cacheKey);
+        } else {
+          imgElement.src = coverCache.get(cacheKey);
+        }
+        return;
+      }
+
+      pdfjsLib.getDocument(pdfUrl).promise
+        .then(pdf => {
+          if (pdf.numPages === 0) {
+            throw new Error('PDF has no pages');
+          }
+          return pdf.getPage(1);
+        })
+        .then(page => {
+          const viewport = page.getViewport({ scale: useCanvas ? 0.3 : 0.5 });
+          
+          if (useCanvas && imgElement instanceof HTMLCanvasElement) {
+            imgElement.height = viewport.height;
+            imgElement.width = viewport.width;
+            
+            return page.render({
+              canvasContext: imgElement.getContext('2d'),
+              viewport: viewport
+            }).promise.then(() => {
+              const dataUrl = imgElement.toDataURL();
+              coverCache.set(cacheKey, dataUrl);
+            });
+          } else {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            return page.render({
+              canvasContext: context,
+              viewport: viewport
+            }).promise.then(() => {
+              const dataUrl = canvas.toDataURL();
+              imgElement.src = dataUrl;
+              coverCache.set(cacheKey, dataUrl);
+            });
+          }
+        })
+        .catch((error) => {
+          console.warn(`Could not generate preview for ${cacheKey}:`, error);
+          showFallbackThumbnail(imgElement, useCanvas);
+        });
+    }
+
+    function showFallbackThumbnail(element, useCanvas = false) {
+      if (useCanvas && element instanceof HTMLCanvasElement) {
+        const ctx = element.getContext('2d');
+        element.width = 200;
+        element.height = 300;
+        ctx.fillStyle = '#f0f2f5';
+        ctx.fillRect(0, 0, element.width, element.height);
+        ctx.fillStyle = '#2E7D32';
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('PDF', element.width/2, element.height/2);
+        ctx.font = '14px Arial';
+        ctx.fillText('Preview', element.width/2, element.height/2 + 25);
+      } else {
+        element.src = '';
+        element.style.backgroundColor = '#f0f2f5';
+        element.style.display = 'flex';
+        element.style.alignItems = 'center';
+        element.style.justifyContent = 'center';
+        element.innerHTML = '<i class="fas fa-book" style="font-size:2rem; color:#adb5bd;"></i>';
+      }
+    }
+
+    async function fetchBooks() {
+      try {
+        const data = await B2Client.fetchFiles('ebooks');
+        
+        // Filter PDF files - handle both uppercase Key and lowercase key
+        const pdfFiles = data.filter(item => {
+          const key = item.Key || item.key;
+          return key && key.toLowerCase().endsWith('.pdf');
+        });
+        
+        // Process each PDF file with enhanced metadata extraction
+        books = await Promise.all(
+          pdfFiles.map(async (item) => {
+            try {
+              // Handle both uppercase and lowercase property names
+              const key = item.Key || item.key;
+              const metadata = item.Metadata || item.metadata || {};
+              const lastModified = item.LastModified || item.lastModified || new Date().toISOString();
+              
+              // Enhanced metadata extraction with multiple possible key names
+              const title = getMetaValue(item, ['title', 'Title', 'documentTitle']) || 
+                           metadata.title || 
+                           extractTitleFromKey(key);
+              
+              const author = getMetaValue(item, ['author', 'Author', 'creator', 'Creator']) || 
+                            metadata.author || 
+                            "Unknown Author";
+              
+              const abstract = getMetaValue(item, ['abstract', 'Abstract', 'description', 'Description', 'subject', 'Subject']) || 
+                             metadata.abstract || 
+                             `${title} is available in our collection.`;
+              
+              const pages = getMetaValue(item, ['pages', 'Pages', 'pageCount']) || 
+                           metadata.pages || 
+                           "N/A";
+              
+              const year = getMetaValue(item, ['year', 'Year', 'publicationYear', 'date']) || 
+                          metadata.year || 
+                          "N/A";
+              
+              const category = getMetaValue(item, ['category', 'Category', 'subject', 'Subject']) || 
+                             metadata.category || 
+                             "General";
+
+              const department = getMetaValue(item, ['department', 'Department']) || 
+                               metadata.department || 
+                               "General";
+
+              const pdfUrl = await generatePresignedUrl(key);
+
+              return {
+                key: key,
+                title,
+                author,
+                department,
+                abstract,
+                pages,
+                year,
+                category,
+                pdfUrl: pdfUrl,
+                lastModified: lastModified
+              };
+            } catch (error) {
+              console.error(`Error processing item:`, item, error);
+              const key = item.Key || item.key;
+              const pdfUrl = await generatePresignedUrl(key);
+              return {
+                key: key,
+                title: extractTitleFromKey(key),
+                author: "Unknown Author",
+                department: "General",
+                abstract: `${extractTitleFromKey(key)} is available in our collection.`,
+                pages: "N/A",
+                year: "N/A",
+                category: "General",
+                pdfUrl: pdfUrl,
+                lastModified: item.LastModified || item.lastModified || new Date().toISOString()
+              };
+            }
+          })
+        );
+
+        // Sort books by last modified date (newest first)
+        books.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
+        
+        displayThumbnails(books);
+        updateRecentBooksCarousel();
+      } catch (error) {
+        console.error('Error fetching books:', error);
+        showErrorState('Failed to load books. Please try again later.');
+      }
+    }
+
+    function displayThumbnails(booksToDisplay) {
+      if (!gallery) return;
+      
+      gallery.innerHTML = '';
+      if (booksToDisplay.length === 0) {
+        showEmptyState('No books found matching your search.');
+        return;
+      }
+      booksToDisplay.forEach(book => {
+        const thumbnail = createThumbnailElement(book);
+        gallery.appendChild(thumbnail);
+      });
+    }
+
+    function createThumbnailElement(book) {
+      const thumbnail = document.createElement('div');
+      thumbnail.className = 'thumbnail';
+      thumbnail.title = book.title;
+      thumbnail.setAttribute('data-department', book.department);
+      thumbnail.setAttribute('data-category', book.category);
+
+      const imgContainer = document.createElement('div');
+      imgContainer.className = 'thumbnail-img-container';
+      
+      // Use canvas for better PDF previews
+      const canvas = document.createElement('canvas');
+      canvas.className = 'thumbnail-img';
+      canvas.setAttribute('data-pdfurl', book.pdfUrl);
+
+      // Create hover info overlay with department info
+      const hoverInfo = document.createElement('div');
+      hoverInfo.className = 'thumbnail-hover-info';
+      const hoverTitle = document.createElement('div');
+      hoverTitle.className = 'hover-title';
+      hoverTitle.textContent = book.title;
+      const hoverAuthor = document.createElement('div');
+      hoverAuthor.className = 'hover-author';
+      hoverAuthor.textContent = `by ${book.author}`;
+      const hoverDepartment = document.createElement('div');
+      hoverDepartment.className = 'hover-author';
+      hoverDepartment.textContent = book.department;
+      hoverDepartment.style.fontSize = '0.8rem';
+      hoverDepartment.style.marginTop = '0.5rem';
+      hoverDepartment.style.opacity = '0.7';
+      
+      hoverInfo.appendChild(hoverTitle);
+      hoverInfo.appendChild(hoverAuthor);
+      hoverInfo.appendChild(hoverDepartment);
+
+      imgContainer.appendChild(canvas);
+      thumbnail.appendChild(imgContainer);
+      thumbnail.appendChild(hoverInfo);
+
+      // Generate PDF thumbnail preview with canvas
+      renderPdfThumbnail(book.pdfUrl, canvas, book.key, true);
+      
+      thumbnail.addEventListener('click', () => openModal(book));
+      return thumbnail;
+    }
+
+    function updateRecentBooksCarousel() {
+      if (!recentCarousel) return;
+      
+      recentCarousel.innerHTML = '';
+      const recentBooks = books.slice(0, 5);
+      
+      if (recentBooks.length === 0) return;
+      
+      // Duplicate the books to create a seamless loop
+      const duplicatedBooks = [...recentBooks, ...recentBooks];
+      
+      duplicatedBooks.forEach(book => {
+        const recentBook = document.createElement('div');
+        recentBook.className = 'recent-book';
+        
+        // Use canvas for recent books too
+        const canvas = document.createElement('canvas');
+        canvas.className = 'recent-book-img';
+        canvas.setAttribute('data-pdfurl', book.pdfUrl);
+        
+        // Enhanced hover info
+        const hoverInfo = document.createElement('div');
+        hoverInfo.className = 'recent-book-hover-info';
+        const hoverTitle = document.createElement('div');
+        hoverTitle.className = 'recent-hover-title';
+        hoverTitle.textContent = book.title;
+        const hoverAuthor = document.createElement('div');
+        hoverAuthor.className = 'recent-hover-author';
+        hoverAuthor.textContent = `by ${book.author}`;
+        const hoverDepartment = document.createElement('div');
+        hoverDepartment.className = 'recent-hover-author';
+        hoverDepartment.textContent = book.department;
+        hoverDepartment.style.fontSize = '0.8rem';
+        hoverDepartment.style.marginTop = '0.5rem';
+        hoverDepartment.style.opacity = '0.7';
+        
+        hoverInfo.appendChild(hoverTitle);
+        hoverInfo.appendChild(hoverAuthor);
+        hoverInfo.appendChild(hoverDepartment);
+        
+        // Generate PDF thumbnail preview with canvas
+        renderPdfThumbnail(book.pdfUrl, canvas, book.key, true);
+        
+        recentBook.appendChild(canvas);
+        recentBook.appendChild(hoverInfo);
+        recentBook.addEventListener('click', () => openModal(book));
+        recentCarousel.appendChild(recentBook);
+      });
+    }
+
+    function openModal(book) {
+      if (!modal || !modalTitle || !modalAuthor || !modalAbstract || !modalActionRead) return;
+      
+      modalTitle.textContent = book.title;
+      modalAuthor.textContent = `By ${book.author}`;
+      modalAbstract.textContent = book.abstract;
+      modalActionRead.href = book.pdfUrl;
+      modalActionRead.target = '_blank'; // Open PDF in new tab
+      
+      // Store current PDF URL for full page view
+      currentPdfUrl = book.pdfUrl;
+      
+      // Update meta info with department
+      const modalPages = document.getElementById('modal-pages');
+      const modalYear = document.getElementById('modal-year');
+      const modalCategory = document.getElementById('modal-category');
+      const modalDepartment = document.getElementById('modal-department');
+      
+      if (modalPages) modalPages.textContent = book.pages;
+      if (modalYear) modalYear.textContent = book.year;
+      if (modalCategory) modalCategory.textContent = book.category;
+      if (modalDepartment) modalDepartment.textContent = book.department;
+      
+      // Use canvas for modal preview if available, otherwise fallback to img
+      if (modalCoverCanvas) {
+        renderModalPdfPreview(book.pdfUrl, book.key);
+      } else if (modalCover) {
+        // Fallback to original image-based approach
+        if (coverCache.has(book.key)) {
+          modalCover.src = coverCache.get(book.key);
+        } else {
+          const galleryThumbnail = document.querySelector(`.thumbnail[title="${book.title}"] canvas`);
+          if (galleryThumbnail) {
+            const dataUrl = galleryThumbnail.toDataURL();
+            modalCover.src = dataUrl;
+            coverCache.set(book.key, dataUrl);
+          } else {
+            renderPdfThumbnail(book.pdfUrl, modalCover, book.key, false);
+          }
+        }
+      }
+
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function renderModalPdfPreview(pdfUrl, cacheKey) {
+      if (!modalCoverCanvas || !pdfUrl) {
+        showFallbackModalPreview();
+        return;
+      }
+
+      if (coverCache.has(cacheKey)) {
+        const img = new Image();
+        img.onload = () => {
+          const ctx = modalCoverCanvas.getContext('2d');
+          modalCoverCanvas.width = img.width;
+          modalCoverCanvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+        };
+        img.src = coverCache.get(cacheKey);
+        return;
+      }
+
+      pdfjsLib.getDocument(pdfUrl).promise
+        .then(pdf => pdf.getPage(1))
+        .then(page => {
+          const viewport = page.getViewport({ scale: 0.5 });
+          modalCoverCanvas.height = viewport.height;
+          modalCoverCanvas.width = viewport.width;
+
+          return page.render({
+            canvasContext: modalCoverCanvas.getContext('2d'),
+            viewport: viewport
+          }).promise.then(() => {
+            const dataUrl = modalCoverCanvas.toDataURL();
+            coverCache.set(cacheKey, dataUrl);
+          });
+        })
+        .catch((error) => {
+          console.warn('Could not generate PDF preview:', error);
+          showFallbackModalPreview();
+        });
+    }
+
+    function showFallbackModalPreview() {
+      if (modalCoverCanvas) {
+        const ctx = modalCoverCanvas.getContext('2d');
+        modalCoverCanvas.width = 300;
+        modalCoverCanvas.height = 400;
+        ctx.fillStyle = '#f0f2f5';
+        ctx.fillRect(0, 0, modalCoverCanvas.width, modalCoverCanvas.height);
+        ctx.fillStyle = '#2E7D32';
+        ctx.font = '24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('PDF Document', modalCoverCanvas.width/2, modalCoverCanvas.height/2 - 20);
+        ctx.font = '16px Arial';
+        ctx.fillText('Click to view full content', modalCoverCanvas.width/2, modalCoverCanvas.height/2 + 20);
+      }
+    }
+
+    // Enhanced: Full page PDF view functionality
+    function openFullPdfView() {
+      if (!currentPdfUrl) return;
+      
+      if (pdfFullView && pdfViewerTitle && pdfViewerIframe) {
+        pdfViewerTitle.textContent = modalTitle.textContent;
+        pdfViewerIframe.src = currentPdfUrl;
+        pdfFullView.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      } else {
+        // Fallback: open in new tab
+        window.open(currentPdfUrl, '_blank');
+      }
+    }
+
+    function closeFullPdfView() {
+      if (pdfFullView) {
+        pdfFullView.classList.remove('active');
+        if (pdfViewerIframe) pdfViewerIframe.src = '';
+        document.body.style.overflow = '';
+      }
+    }
+
+    function closeModal() {
+      if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = ''; // Restore scrolling
+      }
+    }
+
+    function openLoginModal() {
+      if (loginModal) {
+        loginModal.classList.add('show');
+        if (loginError) loginError.style.display = 'none';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeLoginModal() {
+      if (loginModal) {
+        loginModal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function toggleMobileMenu() {
+      if (navMenu) {
+        navMenu.classList.toggle('show');
+      }
+    }
+
+    function switchTab(e) {
+      if (!e.currentTarget) return;
+      
+      tabBtns.forEach(btn => btn.classList.remove('active'));
+      tabContents.forEach(content => content.classList.remove('active'));
+      
+      const tabId = e.currentTarget.getAttribute('data-tab');
+      e.currentTarget.classList.add('active');
+      const tabContent = document.getElementById(tabId);
+      if (tabContent) tabContent.classList.add('active');
+    }
+
+    function showEmptyState(message = 'No books available in the collection.') {
+      if (!gallery) return;
+      
+      gallery.innerHTML = `
+        <div style="text-align:center; grid-column:1/-1; padding:3rem;">
+          <i class="fas fa-book-open" style="font-size:2rem; color:#6c757d; margin-bottom:1rem;"></i>
+          <h3 style="margin-bottom:1rem; color:#6c757d;">${message}</h3>
+          <p style="color:#6c757d;">Check back later for new additions to our collection.</p>
+        </div>
+      `;
+    }
+
+    function showErrorState(message) {
+      if (!gallery) return;
+      
+      gallery.innerHTML = `
+        <div style="text-align:center; grid-column:1/-1; padding:3rem;">
+          <i class="fas fa-exclamation-triangle" style="font-size:2rem; color:#dc3545; margin-bottom:1rem;"></i>
+          <h3 style="margin-bottom:1rem;">Error Loading Books</h3>
+          <p>${message}</p>
+          <button onclick="fetchBooks()" style="margin-top:1rem; padding:0.5rem 1rem; background:var(--primary-color); color:white; border:none; border-radius:var(--border-radius); cursor:pointer;">
+            <i class="fas fa-redo"></i> Try Again
+          </button>
+        </div>
+      `;
+    }
+
+    // Enhanced search with debouncing
+    let searchTimeout;
+    function performSearch(term) {
+      if (!term.trim()) {
+        displayThumbnails(books);
+        return;
+      }
+
+      const searchTerm = term.toLowerCase();
+      const filtered = books.filter(book =>
+        book.title.toLowerCase().includes(searchTerm) ||
+        book.author.toLowerCase().includes(searchTerm) ||
+        (book.department && book.department.toLowerCase().includes(searchTerm)) ||
+        book.category.toLowerCase().includes(searchTerm) ||
+        book.abstract.toLowerCase().includes(searchTerm)
+      );
+
+      displayThumbnails(filtered);
+    }
+
+    // Security setup
+    function setupSecurity() {
+      document.addEventListener('copy', (e) => e.preventDefault());
+      document.addEventListener('cut', (e) => e.preventDefault());
+      document.addEventListener('contextmenu', (e) => e.preventDefault());
+      document.addEventListener('selectstart', (e) => e.preventDefault());
+      document.addEventListener('dragstart', (e) => e.preventDefault());
+
+      document.addEventListener('keydown', function (e) {
+        if (
+          (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'a')) ||
+          (e.key === 'F12') ||
+          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C'))
+        ) {
+          e.preventDefault();
+        }
+      });
+    }
+
+    // Event Listeners setup
+    function setupEventListeners() {
+      // Modal close events
+      if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+      }
+      
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeModal();
+        });
+      }
+      
+      // Full PDF view action
+      if (modalActionFull) {
+        modalActionFull.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeModal();
+          setTimeout(openFullPdfView, 300);
+        });
+      }
+      
+      // PDF viewer close
+      if (pdfViewerClose) {
+        pdfViewerClose.addEventListener('click', closeFullPdfView);
+      }
+      
+      if (pdfFullView) {
+        pdfFullView.addEventListener('click', (e) => {
+          if (e.target === pdfFullView) closeFullPdfView();
+        });
+      }
+      
+      // Escape key handler
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeModal();
+          closeLoginModal();
+          closeFullPdfView();
+        }
+      });
+      
+      // Search functionality
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            performSearch(e.target.value);
+          }, 300);
+        });
+      }
+      
+      // Login functionality
+      if (privateReposLink) {
+        privateReposLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          openLoginModal();
+        });
+      }
+      
+      if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = document.getElementById('loginEmail').value;
+          const password = document.getElementById('loginPassword').value;
+          
+          const isValid = validCredentials.some(cred => 
+            cred.email === email && cred.password === password
+          );
+          
+          if (isValid) {
+            window.location.href = 'report.html';
+          } else {
+            if (loginError) loginError.style.display = 'block';
+          }
+        });
+      }
+      
+      // Login modal close
+      const loginClose = document.querySelector('.login-close');
+      if (loginClose) {
+        loginClose.addEventListener('click', closeLoginModal);
+      }
+      
+      // Mobile menu
+      if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+      }
+      
+      // Tab switching
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', switchTab);
+      });
+
+      // FAB click handler
+      if (fab) {
+        fab.addEventListener('click', () => {
+          window.location.href = 'admin.html?section=upload-ebook';
+        });
+      }
+    }
+
+    // Initialize application
+    function init() {
+      setupSecurity();
+      setupEventListeners();
+      updateCurrentDateTime();
+      
+      if (gallery) {
+        fetchBooks();
+      } else {
+        console.error('Gallery element not found!');
+      }
+
+      // Add resize handler for responsive adjustments
+      window.addEventListener('resize', () => {
+        if (recentCarousel) {
+          updateRecentBooksCarousel();
+        }
+      });
+    }
+
+    // Start the application
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof B2Client === 'undefined') {
+        console.error('B2Client is not loaded');
+        showErrorState('Library system is not properly configured. Please contact administrator.');
+        return;
+      }
+      init();
+    });
+</script>
+</body>
+</html>
