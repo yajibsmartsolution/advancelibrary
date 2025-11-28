@@ -1,0 +1,2478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRCOE - Advanced eLibrary System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+:root {
+    --primary-color: #0a9935; /* Primary green */
+    --secondary-color: #020324; /* Dark green */
+    --accent-color: #FFC107; /* Golden yellow for highlights */
+    --light-accent: #8BC34A; /* Light green for secondary accents */
+    --text-color: #333333;
+    --light-text: #757575;
+    --background-light: #F5F5F5;
+    --background-dark: #0f2e14;
+    --success-color: #4CAF50;
+    --warning-color: #FF9800;
+    --info-color: #2196F3;
+    --white: #FFFFFF;
+    --black: #212121;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--background-light);
+    color: var(--text-color);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Header Styles */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px;
+    margin-right: 1rem;
+    border-radius: 50%;
+    border: 2px solid var(--secondary-color);
+}
+
+.logo-text h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.logo-text p {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-left: 2rem;
+    position: relative;
+}
+
+nav ul li a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
+}
+
+nav ul li a:hover {
+    color: var(--accent-color);
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.2s ease;
+}
+
+nav ul li a:hover::after {
+    width: 200%;
+}
+
+.active {
+    color: var(--accent-color) !important;
+    font-weight: 600;
+}
+
+.active::after {
+    width: 100% !important;
+    background-color: var(--accent-color);
+}
+
+.hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+.hamburger div {
+    width: 35px;
+    height: 3px;
+    background-color: var(--white);
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Hero Section */
+.hero {
+    margin-top: 80px;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-height: 400px;
+    width: 100%;
+}
+
+.hero-column {
+    flex: 1;
+    min-width: 300px;
+    padding: 1rem;
+    position: relative;
+}
+
+.team-leaders {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 1rem;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.leader-slide {
+    display: none;
+    text-align: center;
+    animation: fade 1.5s ease;
+}
+
+@keyframes fade {
+    from {opacity: 0.4}
+    to {opacity: 1}
+}
+
+.leader-slide img {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--white);
+    margin: 0 auto 1rem;
+    display: block;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.leader-slide h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.leader-slide p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.main-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.main-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    color: var(--white);
+}
+
+.main-hero p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    max-width: 80%;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--white);
+    color: var(--primary-color);
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    background-color: var(--accent-color);
+    color: var(--white);
+}
+
+.dailies-magazines {
+    display: flex;
+    flex-direction: column;
+}
+
+.publications {
+    margin-bottom: 1.5rem;
+}
+
+.publications h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    color: var(--white);
+}
+
+.logos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.logo-item {
+    background-color: var(--white);
+    border-radius: 5px;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-item img {
+    max-width: 100%;
+    max-height: 50px;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: all 0.3s ease;
+}
+
+.logo-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    background-color: var(--accent-color);
+}
+
+.logo-item:hover img {
+    filter: grayscale(0%);
+}
+
+/* Main Content Sections */
+.section {
+    padding: 4rem 2rem;
+    display: none;
+    animation: fadeIn 0.5s ease;
+    background-color: var(--white);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section.active {
+    display: block;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--primary-color);
+    position: relative;
+}
+
+.section-title h2 {
+    font-size: 2rem;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+}
+
+.section-title h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: var(--accent-color);
+}
+
+/* About Us Section */
+.about-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.about-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.about-text h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+}
+
+.about-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.mission-vision {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.mission, .vision {
+    flex: 1;
+    min-width: 300px;
+    background-color: rgba(139, 195, 74, 0.1);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid var(--secondary-color);
+}
+
+.mission h4, .vision h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+.mission h4 i, .vision h4 i {
+    margin-right: 0.5rem;
+    color: var(--accent-color);
+}
+
+.core-values {
+    margin-top: 2rem;
+}
+
+.values-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.value-item {
+    background-color: var(--secondary-color);
+    color: var(--white);
+    padding: 1rem;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.value-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    background-color: var(--primary-color);
+}
+
+.value-item i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent-color);
+}
+
+.leadership {
+    flex: 1;
+    min-width: 500px;
+}
+
+.leaders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.leader-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    border-top: 3px solid var(--secondary-color);
+}
+
+.leader-card.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.leader-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.leader-img {
+    height: 250px;
+    overflow: hidden;
+}
+
+.leader-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.leader-card:hover .leader-img img {
+    transform: scale(1.05);
+}
+
+.leader-info {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.leader-info h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.leader-info p {
+    font-size: 0.9rem;
+    color: var(--light-text);
+}
+
+/* Contact Us Section */
+.contact-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.contact-info {
+    flex: 1;
+    min-width: 300px;
+}
+
+.contact-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.info-item i {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    margin-right: 1rem;
+    margin-top: 0.2rem;
+}
+
+.info-text h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    color: var(--primary-color);
+}
+
+.info-text p, .info-text a {
+    color: var(--light-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.info-text a:hover {
+    color: var(--secondary-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-3px);
+}
+
+.map-container {
+    flex: 1;
+    min-width: 300px;
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.contact-form {
+    flex: 1;
+    min-width: 300px;
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+}
+
+.contact-form h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(15, 109, 7, 0.1);
+}
+
+.form-group textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.submit-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Academic Programs Section */
+.programs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.program-category {
+    flex: 1;
+    min-width: 300px;
+}
+
+.program-category h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--secondary-color);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.accordion {
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+}
+
+.accordion-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.accordion-header:hover {
+    background-color: var(--secondary-color);
+}
+
+.accordion-header h4 {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.accordion-header i {
+    transition: transform 0.3s ease;
+    color: var(--accent-color);
+}
+
+.accordion-header.active i {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    background-color: var(--white);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.accordion-content-inner {
+    padding: 1.5rem;
+}
+
+.program-details {
+    margin-bottom: 1.5rem;
+}
+
+.program-details h5 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.program-details p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.curriculum-btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 0.6rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.curriculum-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Library Services Section */
+.services-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.search-section {
+    flex: 1;
+    min-width: 300px;
+}
+
+.search-box {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    border: 1px solid #eee;
+}
+
+.search-box h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.search-form {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+    font-size: 1rem;
+}
+
+.search-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: var(--accent-color);
+}
+
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.filter-btn {
+    background-color: #f1f1f1;
+    color: #333;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.results-count {
+    font-size: 0.9rem;
+    color: var(--light-text);
+    margin-bottom: 1rem;
+}
+
+.resources-section {
+    flex: 2;
+    min-width: 300px;
+}
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.resource-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.resource-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.resource-img {
+    height: 180px;
+    overflow: hidden;
+}
+
+.resource-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.resource-card:hover .resource-img img {
+    transform: scale(1.05);
+}
+
+.resource-info {
+    padding: 1.5rem;
+}
+
+.resource-info h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.resource-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--light-text);
+    margin-bottom: 1rem;
+}
+
+.resource-desc {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+.resource-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.preview-btn, .download-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.preview-btn {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.preview-btn:hover {
+    background-color: #ddd;
+}
+
+.download-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.download-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 3rem 2rem 1rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 250px;
+}
+
+.footer-column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.footer-column h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--accent-color);
+}
+
+.footer-column p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.footer-links a:hover {
+    color: var(--accent-color);
+    padding-left: 5px;
+}
+
+.footer-links a i {
+    margin-right: 0.5rem;
+    color: var(--accent-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+.admin-login-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--accent-color);
+    color: var(--white);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    transition: all 0.3s ease;
+}
+
+.admin-login-btn:hover {
+    transform: scale(1.1);
+    background-color: var(--secondary-color);
+}
+
+/* Login Popup */
+.login-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.login-popup.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.login-container {
+    background-color: var(--white);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.login-popup.active .login-container {
+    transform: translateY(0);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header h3 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.login-header p {
+    color: var(--light-text);
+}
+
+.login-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.login-form input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.login-form input:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(15, 109, 7, 0.1);
+}
+
+.login-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.login-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--light-text);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    color: var(--primary-color);
+}
+
+.error-message {
+    color: var(--warning-color);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    text-align: center;
+    display: none;
+}
+
+/* Service Cards */
+.service-category {
+    margin-bottom: 2rem;
+}
+
+.service-category h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.service-card {
+    background-color: rgba(139, 195, 74, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+    border-left: 3px solid var(--secondary-color);
+}
+
+.service-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.service-card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondary-color);
+}
+
+.service-card p {
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .hero-column {
+        flex: 100%;
+    }
+    
+    .team-leaders, .dailies-magazines {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    nav ul {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background-color: var(--primary-color);
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 2rem;
+        transition: all 0.5s ease;
+    }
+
+    nav ul.active {
+        left: 0;
+    }
+
+    nav ul li {
+        margin: 1rem 0;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .hamburger.active div:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .hamburger.active div:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active div:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .main-hero h1 {
+        font-size: 2rem;
+    }
+
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .logos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .section {
+        padding: 3rem 1rem;
+    }
+
+    .section-title h2 {
+        font-size: 1.5rem;
+    }
+}
+</style>
+
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="download.jpg" alt="Sa'adatu Rimi College of Education Logo">
+            <div class="logo-text">
+           <h1>     SA'ADATU RIMI COLLEGE OF EDUCATION</h1>
+             <p>A Citadel of Teacher Training Excellence</p>
+            </div>
+        </div>
+        <nav>
+            <ul id="nav-menu">
+                <li><a href="#" class="nav-link active" data-section="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-section="about">About Us</a></li>
+                <li><a href="#" class="nav-link" data-section="contact">Contact Us</a></li>
+                <li><a href="#" class="nav-link" data-section="programs">Academic Programs</a></li>
+                <li><a href="#" class="nav-link" data-section="services">Library Services</a></li>
+                 <li><a href="books.html" class="nav-link">Repository</a></li>
+
+           </ul>
+            <div class="hamburger" id="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </nav>
+    </header>
+
+    <br>
+
+    <!-- Main Content Sections -->
+    <main>
+        <!-- Home Section -->
+        <section class="section active" id="home-section">
+            <!-- Hero Section -->
+         <section class="hero">
+        <div class="hero-column">
+            <div class="team-leaders">
+                <div class="leader-slide">
+                 <img src="Provost1.jpg" alt="Dr. Kabiru Ahmad Gwarzo" class="leader-photo">
+              <h3 class="leader-name">Dr. Kabiru Ahmad Gwarzo</h3>
+               <p class="leader-position">Provost</p>
+               <p class="leader-summary">A visionary leader committed to excellence in teacher training and educational development.</p>
+                </div>
+                      <div class="leader-slide">
+                     <img src="academic.jpeg" alt="Dr. Usman Umar Zango" class="leader-photo">
+                  <h3 class="leader-name">Dr. Usman Umar Zango</h3>
+                  <p class="leader-position">Deputy Provost (Academic)</p>
+                 <p class="leader-summary">Oversees curriculum development and faculty growth.</p>
+                </div>
+
+                <div class="leader-slide">
+                    <img src="Admin.jpeg" alt="Dr. Ibrahim Jarma Kiru" class="leader-photo">
+                  <h3 class="leader-name">Dr. Ibrahim Jarma Kiru</h3>
+                 <p class="leader-position">Deputy Provost (Admin)</p>
+                   <p class="leader-summary">Manages campus infrastructure and administrative systems.</p>
+                      </div>
+
+                       <div class="leader-slide">
+                    <img src="Registrer.jpeg" alt="Dr. Atika Bala Mai Yafe" class="leader-photo">
+                   <h3 class="leader-name">Dr. Atika Bala Mai Yafe</h3>
+                   <p class="leader-position">Registrar</p>
+                  <p class="leader-summary">Ensures smooth coordination between departments and students.</p>
+                  </div>
+
+                       
+
+                    <div class="leader-slide">
+                   <img src="Burser.png" alt="Mal. Munzali Isah Waniabu"  class="leader-photo">
+                     <h3 class="leader-name">Mal. Munzali Isah Wani abu</h3>
+                   <p class="leader-position">College Burser</p>
+                    <p class="leader-summary">Responsible for financial planning and budget oversight.</p>
+                      </div>
+
+                    <div class="leader-slide">
+                    <img src="librarian.jpeg" alt="Haj. Mabruka Abubakar Abba" class="leader-photo">
+                    <h3 class="leader-name">Haj. Mabruka Abubakar Abba</h3>
+                    <p class="leader-position">College Librarian</p>
+                     <p class="leader-summary">Leads the digitization initiative and resource access strategy.</p>
+                      </div>
+
+            </div>
+        </div>
+        <div class="hero-column main-hero">
+            <h1>Explore Knowledge | Empower Learning</h1>
+            <p>Access thousands of academic resources, research papers, and educational materials at your fingertips.</p>
+            <a href="#" class="cta-button" data-section="services">Browse Resources</a>
+        </div>
+        
+    <div class="hero-column">
+  <div class="dailies-magazines">
+    <!-- Daily Newspapers -->
+    <div class="publications">
+      <h3>Daily Newspapers</h3>
+      <div class="logos-grid">
+        <div class="logo-item">
+          <a href="https://www.dailytrust.com"  target="_blank" rel="noopener noreferrer">Daily Trust</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.punchng.com"  target="_blank" rel="noopener noreferrer">The Punch</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.thisdaylive.com"  target="_blank" rel="noopener noreferrer">ThisDay</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.guardian.ng"  target="_blank" rel="noopener noreferrer">The Guardian Nigeria</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.nytimes.com"  target="_blank" rel="noopener noreferrer">New York Times</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.mg.co.za"  target="_blank" rel="noopener noreferrer">Mail & Guardian</a>
+        </div>
+        <!-- New Educational Newspaper -->
+        <div class="logo-item">
+          <a href="https://www.washingtonpost.com"  target="_blank" rel="noopener noreferrer">Washington Post</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Magazines -->
+    <div class="publications">
+      <h3>Magazines</h3>
+      <div class="logos-grid">
+        <div class="logo-item">
+          <a href="https://www.forbesafrica.com"  target="_blank" rel="noopener noreferrer">Forbes Africa</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.completesports.com"  target="_blank" rel="noopener noreferrer">Complete Sports</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.newafricanwoman.com"  target="_blank" rel="noopener noreferrer">New African Woman</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.exquisitemag.com"  target="_blank" rel="noopener noreferrer">Exquisite Magazine</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.businessday.ng"  target="_blank" rel="noopener noreferrer">BusinessDay Magazine</a>
+        </div>
+        <div class="logo-item">
+          <a href="https://www.ovationinternational.com"  target="_blank" rel="noopener noreferrer">Ovation International</a>
+        </div>
+        <!-- New Educational Magazine -->
+        <div class="logo-item">
+          <a href="https://www.chronicle.com/section/higher-education"  target="_blank" rel="noopener noreferrer">Chronicle of Higher Education</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+         
+</section>
+            <div class="section-title">
+                <h2>Welcome to SRCOE eLibrary</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Your Gateway to Academic Excellence</h3>
+                    <p>The Sa'adatu Rimi College of Education Advanced eLibrary System provides students, faculty, and researchers with access to a vast collection of digital resources, including ebooks, journals, research papers, and multimedia materials.</p>
+                    <p>Our mission is to support the academic community by providing cutting-edge information resources and services that enhance teaching, learning, and research activities.</p>
+                    
+                    <div class="mission-vision">
+                        <div class="mission">
+                            <h4><i class="fas fa-bullseye"></i> Our Mission</h4>
+                            <p>To provide equitable access to quality information resources and services that support the teaching, learning, and research needs of the college community.</p>
+                        </div>
+                        <div class="vision">
+                            <h4><i class="fas fa-eye"></i> Our Vision</h4>
+                            <p>To be a world-class digital library that empowers academic excellence through innovative information services and technologies.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="core-values">
+                        <h4><i class="fas fa-star"></i> Core Values</h4>
+                        <div class="values-list">
+                            <div class="value-item">
+                                <i class="fas fa-book-open"></i>
+                                <h5>Knowledge</h5>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-users"></i>
+                                <h5>Community</h5>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <h5>Innovation</h5>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-handshake"></i>
+                                <h5>Integrity</h5>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <h5>Excellence</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="leadership">
+                    <h3>Library Leadership</h3>
+                    <div class="leaders-grid">
+                        <div class="leader-card">
+                            <div class="leader-img">
+                                <img src="https://via.placeholder.com/300x300?text=Director" alt="Library Director">
+                            </div>
+                            <div class="leader-info">
+                                <h4>Dr. Fatima Abubakar</h4>
+                                <p>University Librarian</p>
+                            </div>
+                        </div>
+                        <div class="leader-card">
+                            <div class="leader-img">
+                                <img src="https://via.placeholder.com/300x300?text=Deputy" alt="Deputy Librarian">
+                            </div>
+                            <div class="leader-info">
+                                <h4>Mr. Yusuf Abdullahi</h4>
+                                <p>Deputy Librarian</p>
+                            </div>
+                        </div>
+                        <div class="leader-card">
+                            <div class="leader-img">
+                                <img src="https://via.placeholder.com/300x300?text=Systems" alt="Systems Librarian">
+                            </div>
+                            <div class="leader-info">
+                                <h4>Mrs. Aisha Mohammed</h4>
+                                <p>Systems Librarian</p>
+                            </div>
+                        </div>
+                        <div class="leader-card">
+                            <div class="leader-img">
+                                <img src="https://via.placeholder.com/300x300?text=Reference" alt="Reference Librarian">
+                            </div>
+                            <div class="leader-info">
+                                <h4>Mr. Ibrahim Suleiman</h4>
+                                <p>Reference Librarian</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+<br>
+        <!-- About Us Section -->
+        <section class="section" id="about-section">
+            <div class="section-title">
+                <h2>About Our eLibrary</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Our History</h3>
+                    <p>Established in 1989, the Sa'adatu Rimi College of Education Library has grown from a modest collection of print materials to a state-of-the-art digital library serving thousands of students and faculty members.</p>
+                    <p>In 2015, we launched our digital transformation initiative, which has resulted in the development of this comprehensive eLibrary platform that provides 24/7 access to our growing collection of digital resources.</p>
+                    
+                    <h3>Our Collections</h3>
+                    <p>Our eLibrary boasts an extensive collection of over 50,000 ebooks, 15,000 academic journals, 5,000 theses and dissertations, and numerous multimedia resources across all disciplines offered at the college.</p>
+                    
+                    <h3>Services Offered</h3>
+                    <ul style="list-style-type: none; margin-bottom: 1.5rem;">
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-green); margin-right: 0.5rem;"></i> 24/7 access to digital resources</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-green); margin-right: 0.5rem;"></i> Research assistance and reference services</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-green); margin-right: 0.5rem;"></i> Information literacy training</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-green); margin-right: 0.5rem;"></i> Document delivery services</li>
+                        <li><i class="fas fa-check-circle" style="color: var(--primary-green); margin-right: 0.5rem;"></i> Institutional repository management</li>
+                    </ul>
+                    
+                    <h3>Partnerships</h3>
+                    <p>We collaborate with numerous national and international organizations to enhance our collections and services, including:</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
+                        <div style="background-color: white; padding: 0.5rem 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">National Library of Nigeria</div>
+                        <div style="background-color: white; padding: 0.5rem 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">Nigerian University Libraries Consortium</div>
+                        <div style="background-color: white; padding: 0.5rem 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">African Digital Library</div>
+                        <div style="background-color: white; padding: 0.5rem 1rem; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">EBSCO Information Services</div>
+                    </div>
+                </div>
+                <div class="leadership">
+                    <h3>Achievements & Awards</h3>
+                    <div class="leaders-grid">
+                        <div class="leader-card">
+                            <div class="leader-img">
+                                <img src="Photo/digital.png" alt="Best Digital Library 2022">
+                            </div>
+                            <div class="leader-info">
+                                <h4>Best Digital Library 2022</h4>
+                                <p>Awarded by Nigerian Library Association</p>
+                            </div>
+                        </div>
+                        <div class="leader-card">
+                            <div class="leader-img">
+                                <img src="Photo/mobile.png" alt="Innovation Award 2021">
+                            </div>
+                            <div class="leader-info">
+                                <h4>Innovation Award 2021</h4>
+                                <p>For our mobile library application</p>
+                            </div>
+                        </div>
+                        <div class="leader-card">
+                            <div class="leader-img">
+                                <img src="Photo/AS.png" alt="Service Excellence 2020">
+                            </div>
+                            <div class="leader-info">
+                                <h4>Service Excellence 2020</h4>
+                                <p>Recognized by the College Senate</p>
+                            </div>
+                        </div>
+                        <div class="leader-card">
+                            <div class="leader-img">
+                                <img src="Photo/ASS.png" alt="Digital Transformation 2019">
+                            </div>
+                            <div class="leader-info">
+                                <h4>Digital Transformation 2019</h4>
+                                <p>Awarded by EDUTech Nigeria</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <br>  
+        <br>
+        <!-- Contact Us Section -->
+        <section class="section" id="contact-section">
+            <div class="section-title">
+                <h2>Contact Us</h2>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Get In Touch</h3>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="info-text">
+                            <h4>Address</h4>
+                            <p>Sa'adatu Rimi College of Education, Kumbotso, Kano State, Nigeria</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div class="info-text">
+                            <h4>Phone</h4>
+                            <p>+234 803 123 4567</p>
+                            <p>+234 802 987 6543</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="info-text">
+                            <h4>Email</h4>
+                            <a href="mailto:library@srcoe.edu.ng">library@srcoe.edu.ng</a>
+                            <a href="mailto:support@srcoe.edu.ng">support@srcoe.edu.ng</a>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div class="info-text">
+                            <h4>Opening Hours</h4>
+                            <p>Monday - Friday: 8:00 AM - 8:00 PM</p>
+                            <p>Saturday: 10:00 AM - 4:00 PM</p>
+                            <p>Sunday: Closed</p>
+                        </div>
+                    </div>
+                    <h3 style="margin-top: 2rem;">Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.9876543210123!2d8.521234567891011!3d11.98765432101234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDU5JzE1LjYiTiA4wrAzMScyMC4wIkU!5e0!3m2!1sen!2sng!4v1234567890123!5m2!1sen!2sng" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <div class="contact-form">
+                    <h3>Send Us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+<br>
+        <!-- Academic Programs Section -->
+        <section class="section" id="programs-section">
+            <div class="section-title">
+                <h2>Academic Programs</h2>
+            </div>
+            <div class="programs-container">
+                <div class="program-category">
+                    <h3>Undergraduate Programs</h3>
+                    <div class="accordion">
+                        <div class="accordion-header">
+                            <h4>Bachelor of Education (B.Ed.) in English</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <div class="program-details">
+                                    <h5>Program Overview</h5>
+                                    <p>The B.Ed. in English program prepares students to become competent English language teachers at secondary school level. The program combines linguistic theory with practical teaching methodology.</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Duration</h5>
+                                    <p>4 Years (8 Semesters)</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Entry Requirements</h5>
+                                    <p>Five O'Level credits including English and Literature in English, plus acceptable UTME score.</p>
+                                </div>
+                                <a href="#" class="curriculum-btn">View Curriculum</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion">
+                        <div class="accordion-header">
+                            <h4>Bachelor of Education (B.Ed.) in Mathematics</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <div class="program-details">
+                                    <h5>Program Overview</h5>
+                                    <p>This program equips students with both mathematical knowledge and pedagogical skills needed to teach mathematics effectively at secondary school level.</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Duration</h5>
+                                    <p>4 Years (8 Semesters)</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Entry Requirements</h5>
+                                    <p>Five O'Level credits including English and Mathematics, plus acceptable UTME score.</p>
+                                </div>
+                                <a href="#" class="curriculum-btn">View Curriculum</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion">
+                        <div class="accordion-header">
+                            <h4>Bachelor of Education (B.Ed.) in Biology</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <div class="program-details">
+                                    <h5>Program Overview</h5>
+                                    <p>The B.Ed. in Biology program provides comprehensive training in biological sciences combined with educational theory and practice for teaching biology at secondary level.</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Duration</h5>
+                                    <p>4 Years (8 Semesters)</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Entry Requirements</h5>
+                                    <p>Five O'Level credits including English, Biology, Chemistry and two other subjects, plus acceptable UTME score.</p>
+                                </div>
+                                <a href="#" class="curriculum-btn">View Curriculum</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="program-category">
+                    <h3>Postgraduate Programs</h3>
+                    <div class="accordion">
+                       <div class="accordion">
+  <div class="accordion-header">
+    <h4>NCE in Early Childhood Care and Education (ECCE)</h4>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+  <div class="accordion-content">
+    <div class="accordion-content-inner">
+      <div class="program-details">
+        <h5>Program Overview</h5>
+        <p>Designed to train competent teachers for pre-primary and early primary levels. Emphasizes child development, play-based instruction, and inclusive education techniques.</p>
+      </div>
+      <div class="program-details">
+        <h5>Duration</h5>
+        <p>3 Years (6 Semesters)</p>
+      </div>
+      <div class="program-details">
+        <h5>Entry Requirements</h5>
+        <p>Minimum of 5 credits in O'Level including English and Mathematics, and 3 relevant subjects.</p>
+      </div>
+      <a href="#" class="curriculum-btn">View Curriculum</a>
+    </div>
+  </div>
+</div>
+
+<div class="accordion">
+  <div class="accordion-header">
+    <h4>NCE in Primary Education Studies (PES)</h4>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+  <div class="accordion-content">
+    <div class="accordion-content-inner">
+      <div class="program-details">
+        <h5>Program Overview</h5>
+        <p>This program prepares prospective teachers to handle pupils in primary schools. Covers pedagogy, content mastery, and classroom management.</p>
+      </div>
+      <div class="program-details">
+        <h5>Duration</h5>
+        <p>3 Years (6 Semesters)</p>
+      </div>
+      <div class="program-details">
+        <h5>Entry Requirements</h5>
+        <p>Minimum of 5 O'Level credits including English, Mathematics, and 3 other relevant subjects.</p>
+      </div>
+      <a href="#" class="curriculum-btn">View Curriculum</a>
+    </div>
+  </div>
+</div>
+
+<div class="accordion">
+  <div class="accordion-header">
+    <h4>NCE in Computer Science / Integrated Science</h4>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+  <div class="accordion-content">
+    <div class="accordion-content-inner">
+      <div class="program-details">
+        <h5>Program Overview</h5>
+        <p>Focuses on foundational concepts in Computer Science and Integrated Science for teaching at basic education level. Emphasis on digital literacy and scientific reasoning.</p>
+      </div>
+      <div class="program-details">
+        <h5>Duration</h5>
+        <p>3 Years (6 Semesters)</p>
+      </div>
+      <div class="program-details">
+        <h5>Entry Requirements</h5>
+        <p>5 O’Level credits in English, Mathematics, Physics/Biology, and two other science subjects.</p>
+      </div>
+      <a href="#" class="curriculum-btn">View Curriculum</a>
+    </div>
+  </div>
+</div>
+
+<div class="accordion">
+  <div class="accordion-header">
+    <h4>NCE in English / Hausa</h4>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+  <div class="accordion-content">
+    <div class="accordion-content-inner">
+      <div class="program-details">
+        <h5>Program Overview</h5>
+        <p>Designed to produce qualified bilingual teachers capable of teaching English and Hausa language at basic education level. It blends linguistics, literature, and methodology.</p>
+      </div>
+      <div class="program-details">
+        <h5>Duration</h5>
+        <p>3 Years (6 Semesters)</p>
+      </div>
+      <div class="program-details">
+        <h5>Entry Requirements</h5>
+        <p>Credits in English, Hausa, and three additional subjects including Literature or Government.</p>
+      </div>
+      <a href="#" class="curriculum-btn">View Curriculum</a>
+    </div>
+  </div>
+</div>
+
+<div class="accordion">
+  <div class="accordion-header">
+    <h4>NCE in Social Studies / Islamic Studies</h4>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+  <div class="accordion-content">
+    <div class="accordion-content-inner">
+      <div class="program-details">
+        <h5>Program Overview</h5>
+        <p>This program trains teachers in civics, social responsibilities, and Islamic moral teachings. It promotes peace, unity, and values-based education.</p>
+      </div>
+      <div class="program-details">
+        <h5>Duration</h5>
+        <p>3 Years (6 Semesters)</p>
+      </div>
+      <div class="program-details">
+        <h5>Entry Requirements</h5>
+        <p>5 credits including English, Islamic Studies, Government/Civic Education, and two others.</p>
+      </div>
+      <a href="#" class="curriculum-btn">View Curriculum</a>
+    </div>
+  </div>
+</div>
+
+                
+                <div class="program-category">
+                    <h3>Certificate Programs</h3>
+                    <div class="accordion">
+                        <div class="accordion-header">
+                            <h4>Certificate in Early Childhood Education</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <div class="program-details">
+                                    <h5>Program Overview</h5>
+                                    <p>This program provides foundational knowledge and skills for teaching young children (ages 3-8). It covers child development, play-based learning, and classroom management.</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Duration</h5>
+                                    <p>6 Months</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Entry Requirements</h5>
+                                    <p>Minimum of 3 O'Level credits including English Language.</p>
+                                </div>
+                                <a href="#" class="curriculum-btn">View Curriculum</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion">
+                        <div class="accordion-header">
+                            <h4>Certificate in Educational Technology</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <div class="program-details">
+                                    <h5>Program Overview</h5>
+                                    <p>This program introduces educators to the integration of technology in teaching and learning. It covers instructional design, multimedia tools, and e-learning platforms.</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Duration</h5>
+                                    <p>6 Months</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Entry Requirements</h5>
+                                    <p>Minimum of 3 O'Level credits including English Language, basic computer literacy recommended.</p>
+                                </div>
+                                <a href="#" class="curriculum-btn">View Curriculum</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion">
+                        <div class="accordion-header">
+                            <h4>Certificate in Special Needs Education</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                <div class="program-details">
+                                    <h5>Program Overview</h5>
+                                    <p>This program prepares educators to work with students with special needs. It covers inclusive education strategies, assessment techniques, and intervention methods.</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Duration</h5>
+                                    <p>6 Months</p>
+                                </div>
+                                <div class="program-details">
+                                    <h5>Entry Requirements</h5>
+                                    <p>Minimum of 3 O'Level credits including English Language.</p>
+                                </div>
+                                <a href="#" class="curriculum-btn">View Curriculum</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+<br>
+        <!-- Library Services Section -->
+      <!-- Library Services Section -->
+<section class="section" id="services-section">
+  <div class="section-title">
+    <h2>Library Services</h2>
+  </div>
+
+  <div class="services-container">
+
+    <!-- Digital Access -->
+    <div class="service-category">
+      <h3><i class="fas fa-book-open"></i> Core eLibrary Services</h3>
+      <div class="service-grid">
+        <div class="service-card">
+          <h4>eBook Access</h4>
+          <p>Full access to digitized textbooks, academic publications, and study guides.</p>
+        </div>
+        <div class="service-card">
+          <h4>eJournal Subscriptions</h4>
+          <p>Access to scholarly journals in education, science, social sciences, etc.</p>
+        </div>
+        <div class="service-card">
+          <h4>Past Questions Archive</h4>
+          <p>Repository of past exam questions for student preparation.</p>
+        </div>
+        <div class="service-card">
+          <h4>Curriculum Database</h4>
+          <p>Digital curriculum/syllabi for all academic programs.</p>
+        </div>
+        <div class="service-card">
+          <h4>Research Project Repository</h4>
+          <p>Uploads and archives of students’ final year projects and dissertations.</p>
+        </div>
+        <div class="service-card">
+          <h4>Video & Audio Lectures</h4>
+          <p>Recorded lectures, tutorials, and workshops by lecturers.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search & Discovery -->
+    <div class="service-category">
+      <h3><i class="fas fa-search"></i> Search & Discovery</h3>
+      <div class="service-grid">
+        <div class="service-card">
+          <h4>Advanced Search Engine</h4>
+          <p>Search books, authors, course materials, keywords, subjects.</p>
+        </div>
+        <div class="service-card">
+          <h4>Filter by Faculty/Subject</h4>
+          <p>Refine search results based on department or faculty.</p>
+        </div>
+        <div class="service-card">
+          <h4>Live Preview</h4>
+          <p>View summaries or read limited content before full access/download.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Support for Teaching Staff -->
+    <div class="service-category">
+      <h3><i class="fas fa-chalkboard-teacher"></i> Support for Teaching Staff</h3>
+      <div class="service-grid">
+        <div class="service-card">
+          <h4>Faculty Upload Portal</h4>
+          <p>Allow lecturers to upload course materials, slides, and handouts.</p>
+        </div>
+        <div class="service-card">
+          <h4>Citation & Referencing Tools</h4>
+          <p>Help educators and students generate accurate citations in APA/MLA/Harvard formats.</p>
+        </div>
+        <div class="service-card">
+          <h4>Research Collaboration Hub</h4>
+          <p>Connect staff working on similar research topics.</p>
+        </div>
+        <div class="service-card">
+          <h4>Plagiarism Checker</h4>
+          <p>Allow staff to scan documents and assignments for originality.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Services -->
+    <div class="service-category">
+      <h3><i class="fas fa-user-graduate"></i> Student Services</h3>
+      <div class="service-grid">
+        <div class="service-card">
+          <h4>Online Borrowing System</h4>
+          <p>Students can Read, download or  Print digital books at any time.</p>
+        </div>
+        <div class="service-card">
+          <h4>Reading Lists by Program</h4>
+          <p>Suggested reading materials curated for each course or semester.</p>
+        </div>
+        <div class="service-card">
+          <h4>Interactive Study Rooms</h4>
+          <p>Virtual rooms for student discussion and group work.</p>
+        </div>
+        <div class="service-card">
+          <h4>Learning Management Links</h4>
+          <p>Direct links to Moodle, Google Classroom, or other platforms used by the institution.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- External Resources Integration -->
+    <div class="service-category">
+      <h3><i class="fas fa-globe"></i> External Resources Integration</h3>
+      <div class="service-grid">
+        <div class="service-card">
+          <h4>External Academic Journal Links</h4>
+          <p>JSTOR, Google Scholar, ResearchGate access.</p>
+        </div>
+        <div class="service-card">
+          <h4>Dailies & Magazines</h4>
+          <p>Curated links to education-focused publications and news sources.</p>
+        </div>
+        <div class="service-card">
+          <h4>Government Policy Archive</h4>
+          <p>Digital copies of Nigerian education policy documents, NUC/NCCE guidelines.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Administrative & Technical Services -->
+    <div class="service-category">
+      <h3><i class="fas fa-cogs"></i> Administrative & Technical Services</h3>
+      <div class="service-grid">
+        <div class="service-card">
+          <h4>Account Management</h4>
+          <p>Student login, password reset, borrowing history.</p>
+        </div>
+        <div class="service-card">
+          <h4>Usage Analytics</h4>
+          <p>Track most-read books, active users, and download statistics.</p>
+        </div>
+        <div class="service-card">
+          <h4>Digital ID & Access Control</h4>
+          <p>Restrict access based on role (student, staff, admin).</p>
+        </div>
+        <div class="service-card">
+          <h4>Help Desk & Live Chat</h4>
+          <p>Technical support via real-time chat or ticket system.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security & Compliance -->
+    <div class="service-category">
+      <h3><i class="fas fa-shield-alt"></i> Security & Compliance</h3>
+      <div class="service-grid">
+        <div class="service-card">
+          <h4>User Authentication</h4>
+          <p>Secure login with role-based access.</p>
+        </div>
+        <div class="service-card">
+          <h4>Data Backup & Recovery</h4>
+          <p>Regular backup of the digital library database.</p>
+        </div>
+        <div class="service-card">
+          <h4>Content Copyright Control</h4>
+          <p>Ensure all eBooks and materials are authorized for digital use.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About SRCOE eLibrary</h3>
+                <p>The Sa'adatu Rimi College of Education Advanced eLibrary System is a state-of-the-art digital library providing access to thousands of academic resources to support teaching, learning, and research.</p>
+                <p>Our mission is to empower the academic community through innovative information services.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#" data-section="home"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#" data-section="about"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="#" data-section="contact"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="#" data-section="programs"><i class="fas fa-chevron-right"></i> Academic Programs</a></li>
+                    <li><a href="#" data-section="services"><i class="fas fa-chevron-right"></i> Library Services</a></li>
+                    <li><a href="reposit.html"><i class="fas fa-chevron-right"></i> Repository</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Library Hours</h3>
+                <ul class="footer-links">
+                    <li><i class="far fa-clock"></i> Monday - Friday: 8:00 AM - 8:00 PM</li>
+                    <li><i class="far fa-clock"></i> Saturday: 10:00 AM - 4:00 PM</li>
+                    <li><i class="far fa-clock"></i> Sunday: Closed</li>
+                    <li><i class="fas fa-exclamation-circle"></i> 24/7 Online Access Available</li>
+                </ul>
+                <h3 style="margin-top: 1.5rem;">Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Sa'adatu Rimi College of Education - Advanced eLibrary System. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Admin Login Button -->
+    <div class="admin-login-btn" id="adminLoginBtn">
+        <i class="fas fa-user-shield"></i>
+    </div>
+
+    <!-- Login Popup -->
+    <div class="login-popup" id="loginPopup">
+        <div class="login-container">
+            <div class="login-header">
+                <h3>Admin Login</h3>
+                <p>Access the library management system</p>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="error-message" id="errorMessage">Invalid credentials. Please try again.</div>
+                <div class="login-actions">
+                    <button type="button" class="close-btn" id="closeLogin">Cancel</button>
+                    <button type="submit" class="login-btn">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+       // Navigation functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.section');
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    
+    navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        const sectionId = this.getAttribute('data-section');
+
+        // Only prevent default for internal navigation
+        if (sectionId) {
+            e.preventDefault();
+
+            // Remove active class from all links
+            navLinks.forEach(navLink => {
+                navLink.classList.remove('active');
+            });
+
+            // Add active class to clicked link
+            this.classList.add('active');
+
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+
+            // Close mobile menu if open
+            if (navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        // if no sectionId, allow default browser behavior (like going to book.html)
+    });
+});
+
+    // Hamburger menu toggle
+    hamburger.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+    
+    // Team leaders slideshow
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.leader-slide');
+    
+    function showSlide(n) {
+        slides.forEach(slide => {
+            slide.style.display = 'none';
+        });
+        
+        currentSlide = (n + slides.length) % slides.length;
+        slides[currentSlide].style.display = 'block';
+    }
+    
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+    
+    // Show first slide
+    showSlide(0);
+    
+    // Auto-advance slides every 5 seconds
+    setInterval(nextSlide, 5000);
+    
+    // Accordion functionality
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        });
+    });
+    
+    // Filter buttons
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Admin login popup
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const loginPopup = document.getElementById('loginPopup');
+    const closeLogin = document.getElementById('closeLogin');
+    const loginForm = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    adminLoginBtn.addEventListener('click', function() {
+        loginPopup.classList.add('active');
+    });
+    
+    closeLogin.addEventListener('click', function() {
+        loginPopup.classList.remove('active');
+        errorMessage.style.display = 'none';
+    });
+    
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        // Valid credentials
+        const validCredentials = [
+            { email: 'Yaquba@yajib.uk.co', password: 'Yaq1234567' },
+            { email: 'Abubakar@yajib.uk.co', password: 'Abu1234567' },
+            { email: 'Mabruka@yajib.uk.co', password: 'Mab1234567' }
+        ];
+        
+        // Check if credentials match
+        const isValid = validCredentials.some(cred => 
+            (username === cred.email || username === cred.email.split('@')[0]) && 
+            password === cred.password
+        );
+        
+        if (isValid) {
+            // Redirect to repository page
+            window.location.href = 'admin.html';
+        } else {
+            // Show error message
+            errorMessage.style.display = 'block';
+        }
+    });
+    
+    // Animate leader cards on scroll
+    const leaderCards = document.querySelectorAll('.leader-card');
+    
+    function checkScroll() {
+        leaderCards.forEach((card, index) => {
+            const cardTop = card.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            if (cardTop < windowHeight - 100) {
+                setTimeout(() => {
+                    card.classList.add('animate');
+                }, index * 200);
+            }
+        });
+    }
+    
+    // Initial check
+    checkScroll();
+    
+    // Check on scroll
+    window.addEventListener('scroll', checkScroll);
+    
+    // Contact form submission
+    const contactForm = document.getElementById('contactForm');
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+    }
+    
+    // Search functionality
+    const searchForm = document.querySelector('.search-form');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchTerm = this.querySelector('.search-input').value;
+            if (searchTerm.trim() !== '') {
+                alert(`Searching for: ${searchTerm}\nThis would normally show search results.`);
+            }
+        });
+    }
+    
+    // Resource download buttons
+    const downloadBtns = document.querySelectorAll('.download-btn');
+    downloadBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('This would normally download the resource. For demo purposes, this is just a simulation.');
+        });
+    });
+    
+    // Resource preview buttons
+    const previewBtns = document.querySelectorAll('.preview-btn');
+    previewBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('This would normally show a preview of the resource. For demo purposes, this is just a simulation.');
+        });
+    });
+    
+    // Curriculum buttons
+    const curriculumBtns = document.querySelectorAll('.curriculum-btn');
+    curriculumBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('This would normally show the curriculum details. For demo purposes, this is just a simulation.');
+        });
+    });
+    
+    // CTA button functionality
+    const ctaButton = document.querySelector('.cta-button');
+    if (ctaButton) {
+        ctaButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sectionId = this.getAttribute('data-section');
+            
+            // Remove active class from all links
+            navLinks.forEach(navLink => {
+                navLink.classList.remove('active');
+            });
+            
+            // Add active class to services link
+            document.querySelector(`.nav-link[data-section="${sectionId}"]`).classList.add('active');
+            
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show services section
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    
+    // Footer links functionality
+    const footerLinks = document.querySelectorAll('.footer-links a[data-section]');
+    footerLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sectionId = this.getAttribute('data-section');
+            
+            // Remove active class from all links
+            navLinks.forEach(navLink => {
+                navLink.classList.remove('active');
+            });
+            
+            // Add active class to clicked section
+            document.querySelector(`.nav-link[data-section="${sectionId}"]`).classList.add('active');
+            
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+    
+    // Newspaper and magazine logo click handlers are already in the HTML via onclick
+});
+    </script>
+<script>
+  document.addEventListener('copy', (e) => e.preventDefault());
+  document.addEventListener('cut', (e) => e.preventDefault());
+</script>
+
+
+</body>
+</html>
