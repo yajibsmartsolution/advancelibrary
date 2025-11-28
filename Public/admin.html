@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-Frame-Options" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sa'adatu Rimi College - Editorial Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+  <style>
+    .btn-edit, .btn-delete {
+      padding: 5px 10px;
+      margin: 2px;
+      cursor: pointer;
+    }
+    .btn-edit { background-color: #28a745; color: white; border: none; }
+    .btn-delete { background-color: #dc3545; color: white; border: none; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+  </style>
+  <style>
+    /* ========== GLOBAL STYLES ========== */
+    :root {
+      --primary-green: #006400;
+      --secondary-green: #004d00;
+      --accent-green: #008000;
+      --light-green: #e8f5e9;
+      --text-dark: #333;
+      --text-light: #f8f8f8;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    /* ========== HEADER STYLES ========== */
+    .header-container {
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+      color: white;
+      padding: 15px 0;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+    }
+    .header-content {
+      display: flex;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .logo {
+      height: 60px;
+      width: auto;
+      margin-right: 20px;
+    }
+    .header-text {
+      flex-grow: 1;
+    }
+    .header-text h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    .header-text p {
+      margin: 5px 0 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--light-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-green);
+      font-weight: bold;
+    }
+
+    /* ========== NAVIGATION STYLES ========== */
+    .nav-container .nav-link {
+      text-decoration: none;
+      color: #ffffff;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: inherit;
+      font-family: inherit;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      padding: 0.2rem 1rem;
+      transition: all 0.3s ease;
+    }
+    nav {
+      background-color: var(--secondary-green);
+      box-shadow: var(--shadow);
+      position: fixed;
+      top: 85px;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      padding: 10px 0;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .dropdown {
+      position: relative;
+      cursor: pointer;
+      padding: 15px 25px;
+      color: white;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+    .dropdown:hover,
+    .dropdown.active {
+      background-color: var(--accent-green);
+    }
+    .dropdown i {
+      margin-right: 8px;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: white;
+      min-width: 220px;
+      z-index: 100;
+      box-shadow: var(--shadow);
+      border-radius: 0 0 4px 4px;
+      overflow: hidden;
+    }
+    .dropdown-menu a {
+      color: var(--text-dark);
+      padding: 12px 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      transition: var(--transition);
+    }
+    .dropdown-menu a:hover {
+      background-color: var(--light-green);
+      color: var(--primary-green);
+    }
+    .dropdown-menu i {
+      width: 20px;
+      margin-right: 10px;
+      color: var(--primary-green);
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    /* ========== MAIN CONTENT LAYOUT ========== */
+    .main-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 30px;
+    }
+    .sidebar {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+    .sidebar-title {
+      color: var(--primary-green);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .quick-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .quick-links a {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      color: var(--text-dark);
+      text-decoration: none;
+      transition: var(--transition);
+      width: 100%;
+    }
+    .quick-links a:hover {
+      color: var(--primary-green);
+    }
+    .quick-links i {
+      margin-right: 10px;
+      width: 20px;
+      color: var(--primary-green);
+    }
+    .content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+    }
+    .section-title {
+      color: var(--primary-green);
+      margin-top: 0;
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .status-message {
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    .status-message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status-message.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .status-message.warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+    /* ========== FORM STYLES ========== */
+    .form-container {
+      background: #fafafa;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      margin-bottom: 30px;
+      max-width: 100%;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 2px rgba(0, 100, 0, 0.1);
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .btn {
+      background-color: var(--primary-green);
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .btn:hover {
+      background-color: var(--secondary-green);
+    }
+    .btn i {
+      margin-right: 8px;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #f3f3f3;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-bar {
+      height: 20px;
+      width: 0%;
+      background-color: var(--primary-green);
+      color: white;
+      font-size: 14px;
+      text-align: center;
+      line-height: 20px;
+      transition: width 0.3s ease;
+    }
+
+    /* ========== TABLE STYLES ========== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      table-layout: fixed;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      max-width: 200px;
+    }
+
+    th {
+      background-color: var(--primary-green);
+      color: white;
+      text-align: left;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:hover {
+      background-color: var(--light-green);
+    }
+
+    td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    td:hover {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    td[contenteditable="true"] {
+      white-space: normal;
+      overflow: auto;
+      min-height: 50px;
+      max-height: 150px;
+      resize: vertical;
+    }
+
+    td {
+      position: relative;
+    }
+
+    td:hover::after {
+      content: attr(title);
+      position: absolute;
+      left: 0;
+      top: 100%;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 5px;
+      z-index: 100;
+      min-width: 200px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    /* ========== STATS CARD STYLES ========== */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .stat-icon {
+      font-size: 2rem;
+      color: var(--primary-green);
+      margin-bottom: 10px;
+    }
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin: 10px 0;
+    }
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* ========== UTILITY CLASSES ========== */
+    .full-width {
+      grid-column: span 2;
+    }
+    .input-full {
+      width: 100% !important;
+    }
+    .hidden {
+      display: none;
+    }
+    .active-section {
+      display: block;
+    }
+
+    /* File Upload Styles */
+    .file-upload {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      border-radius: 6px;
+      background: #f9f9f9;
+      position: relative;
+      cursor: pointer;
+    }
+    .file-upload:hover {
+      background: #f0f0f0;
+      border-color: var(--primary-green);
+    }
+    .file-upload input[type="file"] {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      cursor: pointer;
+    }
+    .file-name {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #555;
+      background: #eef;
+      border-left: 3px solid var(--primary-green);
+      padding: 6px 10px;
+      word-break: break-all;
+    }
+    .video-preview,
+    .image-preview {
+      margin-top: 20px;
+      max-height: 300px;
+      overflow: hidden;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .video-preview iframe,
+    .video-preview video,
+    .image-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--primary-green);
+      color: white;
+      padding: 40px 20px;
+      border-top: 4px solid var(--accent-green);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+    }
+    .footer-column h4 {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: var(--text-light);
+    }
+    .footer-column p,
+    .footer-column a {
+      color: var(--text-light);
+      text-decoration: none;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .footer-column a:hover {
+      color: var(--accent-green);
+    }
+    .social-icons a {
+      margin-right: 10px;
+      color: var(--text-light);
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+    .social-icons a:hover {
+      color: var(--accent-green);
+    }
+    .copyright {
+      text-align: center;
+      padding: 20px 0;
+      background: var(--secondary-green);
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    /* ========== RESPONSIVE STYLES ========== */
+    @media (max-width: 992px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 576px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      .logo {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+      .nav-container {
+        flex-wrap: wrap;
+      }
+      .dropdown {
+        padding: 12px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header-container">
+  <div class="header-content">
+    <img src="download.jpg" alt="College Logo" class="logo" />
+    <div class="header-text">
+      <h1>Sa'adatu Rimi College of Education</h1>
+      <p>Editorial Content Management System</p>
+    </div>
+    <div class="user-info">
+      <div class="user-avatar">AD</div>
+      <span>Admin Dashboard</span>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation Menu -->
+<nav>
+  <div class="nav-container">
+    <!-- Upload Dropdown -->
+    <div class="dropdown" onclick="toggleDropdown(this)">
+      <i class="fas fa-upload"></i> Upload
+      <div class="dropdown-menu">
+       <a href="index.html" class="nav-link" target="_blank">🏠 Home</a>
+        <a href="#" onclick="showSection('upload-ebook')"><i class="fas fa-book"></i> eBook</a>
+        <a href="#" onclick="showSection('upload-users')"><i class="fas fa-users"></i> Users</a>
+        <a href="#" onclick="showSection('upload-journal')"><i class="fas fa-newspaper"></i> Journal</a>
+        <a href="#" onclick="showSection('upload-projects')"><i class="fas fa-project-diagram"></i> Student Projects</a>
+        <a href="#" onclick="showSection('upload-Inlectures')"><i class="fas fa-chalkboard-teacher"></i> Internal Lectures</a>
+        <a href="#" onclick="showSection('upload-Exlectures')"><i class="fas fa-chalkboard-teacher"></i> External lectures</a>
+        <a href="#" onclick="showSection('upload-research')"><i class="fas fa-graduation-cap"></i> Research/Thesis</a>
+        <a href="#" onclick="showSection('upload-community')"><i class="fas fa-users"></i> Community</a>
+      </div>
+    </div>
+    <!-- Manage Dropdown -->
+    <div class="dropdown" onclick="toggleDropdown(this)">
+      <i class="fas fa-database"></i> Manage
+      <div class="dropdown-menu">
+        <a href="#" onclick="showSection('manage-ebook')"><i class="fas fa-book"></i> eBook</a>
+        <a href="#" onclick="showSection('manage-users')"><i class="fas fa-users"></i> Users</a>
+        <a href="#" onclick="showSection('manage-journal')"><i class="fas fa-newspaper"></i> Journal</a>
+        <a href="#" onclick="showSection('manage-projects')"><i class="fas fa-project-diagram"></i> Student Projects</a>
+        <a href="#" onclick="showSection('manage-Internal-lectures')"><i class="fas fa-chalkboard-teacher"></i> Internal Lectures</a>
+        <a href="#" onclick="showSection('manage-External-lectures')"><i class="fas fa-chalkboard-teacher"></i> External Lectures</a>
+        <a href="#" onclick="showSection('manage-research')"><i class="fas fa-graduation-cap"></i> Research/Thesis</a>
+        <a href="#" onclick="showSection('manage-community')"><i class="fas fa-users"></i> Community</a>
+      </div>
+    </div>
+    <!-- Analytics Dropdown -->
+    <div class="dropdown" onclick="toggleDropdown(this)">
+      <i class="fas fa-chart-line"></i> Analytics
+      <div class="dropdown-menu">
+        <a href="#" onclick="showSection('analytics-login')"><i class="fas fa-sign-in-alt"></i> User Login</a>
+        <a href="#" onclick="showSection('analytics-signup')"><i class="fas fa-user-plus"></i> User Signup</a>
+        <a href="#" onclick="showSection('analytics-visits')"><i class="fas fa-eye"></i> Page Visits</a>
+      </div>
+    </div>
+    <!-- Reports Dropdown -->
+    <div class="dropdown" onclick="toggleDropdown(this)">
+      <i class="fas fa-file-alt"></i> Reports
+      <div class="dropdown-menu">
+        <a href="#" onclick="showSection('reports-daily')"><i class="fas fa-calendar-day"></i> Daily</a>
+        <a href="#" onclick="showSection('reports-weekly')"><i class="fas fa-calendar-week"></i> Weekly</a>
+        <a href="#" onclick="showSection('reports-monthly')"><i class="fas fa-calendar-alt"></i> Monthly</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content Area -->
+<div class="main-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3 class="sidebar-title">Quick Actions</h3>
+    <div class="quick-links">
+      <a href="#" onclick="showSection('dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="#" onclick="showSection('upload-ebook')"><i class="fas fa-book"></i> New eBook</a>
+      <a href="#" onclick="showSection('upload-users')"><i class="fas fa-user-plus"></i> Add User</a>
+      <a href="#" onclick="showSection('manage-research')"><i class="fas fa-graduation-cap"></i> Research Papers</a>
+      <a href="#" onclick="showSection('analytics-visits')"><i class="fas fa-chart-pie"></i> View Analytics</a>
+      <a href="#" onclick="showSection('settings')"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+    <h3 class="sidebar-title" style="margin-top: 30px;">Recent Activity</h3>
+    <div class="recent-activity">
+      <div class="activity-item">
+        <i class="fas fa-book activity-icon"></i>
+        <div class="activity-text">
+          <p>New eBook uploaded</p>
+          <small>2 hours ago</small>
+        </div>
+      </div>
+      <div class="activity-item">
+        <i class="fas fa-user activity-icon"></i>
+        <div class="activity-text">
+          <p>User registered</p>
+          <small>5 hours ago</small>
+        </div>
+      </div>
+      <div class="activity-item">
+        <i class="fas fa-file-alt activity-icon"></i>
+        <div class="activity-text">
+          <p>Research paper updated</p>
+          <small>Yesterday</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Content Sections -->
+  <div class="content">
+
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="active-section">
+      <h2 class="section-title">Dashboard Overview</h2>
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-book"></i></div>
+          <div class="stat-value" id="ebook-count">0</div>
+          <div class="stat-label">eBooks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <div class="stat-value" id="user-count">0</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
+          <div class="stat-value" id="research-count">0</div>
+          <div class="stat-label">Research Papers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+          <div class="stat-value" id="project-count">0</div>
+          <div class="stat-label">Student Projects</div>
+        </div>
+      </div>
+      <div class="form-container">
+        <h3>Quick Upload</h3>
+        <form id="quick-upload-form">
+          <div class="form-group">
+            <label for="quick-upload-type">Content Type</label>
+            <select id="quick-upload-type" class="form-control">
+              <option value="">Select content type</option>
+              <option value="ebook">eBook</option>
+              <option value="journal">Journal</option>
+              <option value="research">Research Paper</option>
+              <option value="project">Student Project</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="quick-upload-title">Title</label>
+            <input type="text" id="quick-upload-title" placeholder="Enter title" />
+          </div>
+          <div class="form-group">
+            <label for="quick-upload-file">File</label>
+            <input type="file" id="quick-upload-file" />
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-upload"></i> Upload</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload eBook Section -->
+    <div id="upload-ebook" class="hidden">
+      <h2 class="section-title">Upload eBook</h2>
+      <div class="form-container">
+        <form onsubmit="submitForm(event, 'ebook')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" name="title" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Author</label>
+              <input type="text" name="author" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Department</label>
+              <select name="department" required class="form-control">
+                <option value="">Select Department</option>
+                <option value="Education">Education</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="Social Science">Social Science</option>
+                <option value="Computer Science">Computer Science</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>ISSN / ISBN</label>
+              <input type="text" name="issn" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Upload PDF</label>
+            <div class="file-upload">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <p>Click or drag & drop here</p>
+              <input type="file" accept=".pdf" required />
+            </div>
+            <div class="file-name" id="fileNameDisplay">No file selected</div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea rows="3" name="description" class="form-control"></textarea>
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-upload"></i> Upload eBook</button>
+          <div class="progress-container hidden">
+            <div class="progress-bar" style="width: 0%;"></div>
+          </div>  
+          <div class="status-message hidden" id="statusMessage"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload User -->
+    <div id="upload-users" class="hidden">
+   <h2 class="section-title">Register New User</h2>
+      <div class="form-container">
+        <form onsubmit="submitForm(event, 'user')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" name="name" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="mobile" name="number" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>ID Number</label>
+              <input type="text" name="id" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,9}" title="7-9 characters, at least one lowercase, uppercase, and number" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Confirm Password</label>
+              <input type="password" name="confirm" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" required class="form-control" placeholder="example@domain.com"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>User Role</label>
+              <select name="role" required class="form-control">
+                <option value="">Select Role</option>
+                <option value="admin">Admin</option>
+                <option value="editor">Editor</option>
+                <option value="hod">HOD</option>
+                <option value="Staff">Staff</option>
+                <option value="student">Student</option>
+                <option value="visitor">Visitor</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <select name="department" required class="form-control">
+                <option value="">Select Department</option>
+                <option value="Education">Education</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="Social Science">Social Science</option>
+                <option value="Computer Science">Computer Science</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Photo</label>
+              <div class="file-upload">
+                <input type="file" accept=".jpg,.png,.jpeg" required />
+              </div>
+              <div class="file-name" id="fileNameDisplay">No file selected</div>
+            </div>
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Register & Send Confirmation</button>
+          <div class="progress-container hidden">
+       <div class="progress-bar"></div>
+        </div>
+          <div class="status-message" id="statusMessage" style="display:none;"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload Journal -->
+    <div id="upload-journal" class="hidden">
+      <h2 class="section-title">Upload Journal</h2>
+      <div class="form-container">
+        <form onsubmit="submitForm(event, 'journal')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Journal Title</label>
+              <input type="text" name="title" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Author(s)</label>
+              <input type="text" name="author" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Institution</label>
+              <select name="institution" required class="form-control">
+                <option value="">Select Institution</option>
+                <option value="University">University</option>
+                <option value="International">International</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Volume/Issue</label>
+              <input type="text" name="volume_issue" placeholder="e.g. Vol. 1, No. 1" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Year</label>
+              <input type="number" name="year" min="1900" max="2100" step="1" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <input type="text" name="department" placeholder="e.g. Computer Science" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Upload Journal PDF</label>
+            <div class="file-upload">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <p>Click or drag & drop here</p>
+              <input type="file" accept=".pdf" required />
+            </div>
+            <div class="file-name" id="fileNameDisplay">No file selected</div>
+          </div>
+          <div class="form-group">
+            <label>Abstract</label>
+            <textarea rows="4" name="abstract" class="form-control"></textarea>
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-upload"></i> Upload Journal</button>
+           <div class="progress-container hidden">
+            <div class="progress-bar"></div>
+           </div>
+          <div class="status-message hidden" id="statusMessage"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload Student Projects Section -->
+    <div id="upload-projects" class="hidden">
+      <h2 class="section-title">Upload Student Project</h2>
+      <div class="form-container">
+        <form onsubmit="submitForm(event, 'projects')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Project Title</label>
+              <input type="text" name="title" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Student Name</label>
+              <input type="text" name="student_name" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Student ID</label>
+              <input type="text" name="student_id" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Supervisor</label>
+              <input type="text" name="supervisor" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Academic Year</label>
+              <input type="text" name="academic_year" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <select name="department" required class="form-control">
+                <option value="">Select Department</option>
+                <option value="Education">Education</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="Social Science">Social Science</option>
+                <option value="Computer Science">Computer Science</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Upload Project File</label>
+            <div class="file-upload">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <p>Click or drag & drop here</p>
+              <input type="file" accept=".pdf,.doc,.docx" required />
+            </div>
+            <div class="file-name" id="fileNameDisplay">No file selected</div>
+          </div>
+          <div class="form-group">
+            <label>Project Abstract</label>
+            <textarea rows="4" name="abstract" class="form-control"></textarea>
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-upload"></i> Upload Project</button>
+          <div class="progress-container hidden">
+        <div class="progress-bar"></div>
+        </div>
+          <div class="status-message hidden" id="statusMessage"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload Internal Lecture Section -->
+    <div id="upload-Inlectures" class="hidden">
+      <h2 class="section-title">Upload Internal Lecture</h2>
+      <div class="form-container">
+        <form onsubmit="submitForm(event, 'internal_lectures')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Lecture Title</label>
+              <input type="text" name="title" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Instructor</label>
+              <input type="text" name="instructor" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Subject</label>
+              <input type="text" name="subject" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <select name="department" required class="form-control">
+                <option value="">Select Department</option>
+                <option value="Education">Education</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="Social Science">Social Science</option>
+                <option value="Computer Science">Computer Science</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Upload Video</label>
+            <div class="file-upload">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <p>Click or drag & drop here</p>
+              <input type="file" accept="video/*" required />
+            </div>
+            <div class="file-name" id="fileNameDisplay">No file selected</div>
+          </div>
+          <video id="videoPreview" controls style="width:100%; max-height:400px; border-radius:8px; margin-top:10px;"></video>
+          <div class="form-group">
+            <label>Lecture Description</label>
+            <textarea rows="3" name="description" class="form-control"></textarea>
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-video"></i> Upload Lecture</button>
+         <div class="progress-container hidden">
+          <div class="progress-bar"></div>
+           </div>
+          <div class="status-message hidden" id="statusMessage"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload External Lecture Section -->
+    <div id="upload-Exlectures" class="hidden">
+      <h2 class="section-title">Upload External Lecture</h2>
+      <div class="form-container">
+        <form onsubmit="submitForm(event, 'external_lecture')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Lecture Title</label>
+              <input type="text" name="title" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Speaker</label>
+              <input type="text" name="speaker" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Video URL (YouTube/Vimeo)</label>
+              <input type="url" name="url" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <input type="text" name="department" required class="form-control" placeholder="e.g. Mathematics" />
+            </div>
+          </div>
+
+          <!-- Video Preview -->
+          <iframe class="video-preview-external" width="100%" height="400"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  frameborder="0"
+                  style="margin-top:10px; border-radius:8px;">
+          </iframe>
+
+          <!-- Progress & Status -->
+          <button type="submit" class="btn"><i class="fas fa-link"></i> Save Lecture Link</button>
+
+          <div class="progress-container hidden">
+           <div class="progress-bar"></div>
+           </div>
+          <div class="status-message hidden" id="statusMessage"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload Research/Thesis Section -->
+    <div id="upload-research" class="hidden">
+      <h2 class="section-title">Upload Research/Thesis</h2>
+      <div class="form-container">
+        <form onsubmit="submitForm(event, 'research')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Research Title</label>
+              <input type="text" name="title" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Author(s)</label>
+              <input type="text" name="author" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Supervisor</label>
+              <input type="text" name="supervisor" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Publication Year</label>
+              <input type="number" name="year" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Department</label>
+              <select name="department" required class="form-control">
+                <option value="">Select Department</option>
+                <option value="Education">Education</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="Social Science">Social Science</option>
+                <option value="Computer Science">Computer Science</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Degree Level</label>
+              <select name="degree_level" class="form-control">
+                <option value="">Select Degree Level</option>
+                <option value="Undergraduate">Undergraduate</option>
+                <option value="Masters">Masters</option>
+                <option value="PhD">PhD</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Upload Research Document</label>
+            <div class="file-upload">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <p>Click or drag & drop here</p>
+              <input type="file" accept=".pdf,.doc,.docx" required />
+            </div>
+            <div class="file-name" id="fileNameDisplay">No file selected</div>
+          </div>
+          <div class="form-group">
+            <label>Abstract</label>
+            <textarea rows="4" name="abstract" class="form-control"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Keywords (comma separated)</label>
+            <input type="text" name="keywords" class="form-control" />
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-upload"></i> Upload Research</button>
+          <div class="progress-container hidden">
+          <div class="progress-bar"></div>
+          </div> 
+          <div class="status-message hidden" id="statusMessage"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload Community Section -->
+    <div id="upload-community" class="hidden">
+      <h2 class="section-title">Upload Community Content</h2>
+      <div class="form-container">
+        <form onsubmit="submitForm(event, 'community')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Content Title</label>
+              <input type="text" name="title" required class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Contributor</label>
+              <input type="text" name="contributor" required class="form-control" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Content Type</label>
+              <select name="content_type" required class="form-control">
+                <option value="">Select Type</option>
+                <option value="Article">Article</option>
+                <option value="Video">Video</option>
+                <option value="Podcast">Podcast</option>
+                <option value="Discussion">Discussion</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Department</label>
+              <select name="department" class="form-control">
+                <option value="">Select Department (if applicable)</option>
+                <option value="Education">Education</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="Social Science">Social Science</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="General">General</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" id="community-file-upload">
+            <label>Upload File</label>
+            <div class="file-upload">
+              <i class="fas fa-cloud-upload-alt upload-icon"></i>
+              <p>Click or drag & drop here</p>
+              <input type="file" id="community-file-input" />
+            </div>
+            <div class="file-name" id="fileNameDisplay">No file selected</div>
+          </div>
+          <div class="form-group" id="community-url-input" style="display:none;">
+            <label>Content URL</label>
+            <input type="url" name="content_url" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea rows="4" name="description" class="form-control"></textarea>
+          </div>
+          <button type="submit" class="btn"><i class="fas fa-upload"></i> Upload Content</button>
+          <div class="progress-container hidden">
+          <div class="progress-bar"></div>
+          </div> 
+          <div class="status-message hidden" id="statusMessage"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Manage eBooks Section -->
+    <div id="manage-ebook" class="hidden">
+      <h2 class="section-title">Manage eBooks</h2>
+      <div class="search-bar">
+        <input type="text" placeholder="Search eBooks..." onkeyup="filterTable('ebook-table', this.value)" />
+        <button class="btn-edit" onclick="saveChanges()">💾 Save Changes</button>
+      </div>
+      <table id="ebook-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" onclick="toggleAll(this)"> Select All</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Department</th>
+            <th>Preview</th>
+            <th>Last Modified</th>
+            <th>Size</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Manage Users Section -->
+    <div id="manage-users" class="hidden">
+      <h2 class="section-title">Manage Users</h2>
+      <div class="search-bar">
+        <input type="text" placeholder="Search Users..." onkeyup="filterTable('user-table', this.value)" />
+        <button class="btn-edit" onclick="saveChanges()">💾 Save Changes</button>
+      </div>
+      <table id="user-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" onclick="toggleAll(this)"> Select All</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>ID Number</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Manage Journals Section -->
+    <div id="manage-journal" class="hidden">
+      <h2 class="section-title">Manage Journals</h2>
+      <div class="search-bar">
+        <input type="text" placeholder="Search Journals..." onkeyup="filterTable('journal-table', this.value)" />
+        <button class="btn-edit" onclick="saveChanges()">💾 Save Changes</button>
+      </div>
+      <table id="journal-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" onclick="toggleAll(this)"> Select All</th>
+            <th>Title</th>
+            <th>Author(s)</th>
+            <th>Issue</th>
+            <th>Date</th>
+            <th>Preview</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Manage Projects Section -->
+    <div id="manage-projects" class="hidden">
+      <h2 class="section-title">Manage Projects</h2>
+      <div class="search-bar">
+        <input type="text" placeholder="Search Projects..." onkeyup="filterTable('project-table', this.value)" />
+        <button class="btn-edit" onclick="saveChanges()">💾 Save Changes</button>
+      </div>
+      <table id="project-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" onclick="toggleAll(this)"> Select All</th>
+            <th>Title</th>
+            <th>Student ID</th>
+            <th>Supervisor</th>
+            <th>Department</th>
+            <th>Preview</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Manage Internal Lectures Section -->
+    <div id="manage-Internal-lectures" class="hidden">
+      <h2 class="section-title">Manage Internal Lectures</h2>
+      <div class="search-bar">
+        <input type="text" placeholder="Search Internal Lectures..." onkeyup="filterTable('internal-lecture-table', this.value)" />
+        <button class="btn-edit" onclick="saveChanges()">💾 Save Changes</button>
+      </div>
+      <table id="internal-lecture-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" onclick="toggleAll(this)"> Select All</th>
+            <th>Title</th>
+            <th>Instructor</th>
+            <th>Department</th>
+            <th>Preview</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Manage External Lectures Section -->
+    <div id="manage-External-lectures" class="hidden">
+      <h2 class="section-title">Manage External Lectures</h2>
+      <div class="search-bar">
+        <input type="text" placeholder="Search External Lectures..." onkeyup="filterTable('external-lecture-table', this.value)" />
+        <button class="btn-edit" onclick="saveChanges()">💾 Save Changes</button>
+      </div>
+      <table id="external-lecture-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" onclick="toggleAll(this)"> Select All</th>
+            <th>Title</th>
+            <th>Speaker</th>
+            <th>Department</th>
+            <th>Preview</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Manage Research/Thesis Section -->
+    <div id="manage-research" class="hidden">
+      <h2 class="section-title">Manage Research/Thesis</h2>
+      <div class="search-bar">
+        <input type="text" placeholder="Search Research/Thesis..." onkeyup="filterTable('research-table', this.value)" />
+        <button class="btn-edit" onclick="saveChanges()">💾 Save Changes</button>
+      </div>
+      <table id="research-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" onclick="toggleAll(this)"> Select All</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Supervisor</th>
+            <th>Department</th>
+            <th>Preview</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Manage Community Section -->
+    <div id="manage-community" class="hidden">
+      <h2 class="section-title">Manage Community Content</h2>
+      <div class="search-bar">
+        <input type="text" placeholder="Search Community Content..." onkeyup="filterTable('community-table', this.value)" />
+        <button class="btn-edit" onclick="saveChanges()">💾 Save Changes</button>
+      </div>
+      <table id="community-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" onclick="toggleAll(this)"> Select All</th>
+            <th>Title</th>
+            <th>Contributor</th>
+            <th>Department</th>
+            <th>Preview</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Analytics Login Section -->
+    <div id="analytics-login" class="hidden">
+      <h2 class="section-title">User Login Analytics</h2>
+      <div class="analytics-container">
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-sign-in-alt"></i></div>
+            <div class="stat-value" id="login-count">0</div>
+            <div class="stat-label">Total Logins</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-value" id="active-users">0</div>
+            <div class="stat-label">Active Users</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-value" id="avg-session">0m</div>
+            <div class="stat-label">Avg Session</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+            <div class="stat-value" id="today-logins">0</div>
+            <div class="stat-label">Today's Logins</div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="loginChart" height="300"></canvas>
+        </div>
+        
+        <div class="table-container">
+          <h3>Recent Login Activity</h3>
+          <table id="login-activity-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Time</th>
+                <th>IP Address</th>
+                <th>Device</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Signup Section -->
+    <div id="analytics-signup" class="hidden">
+      <h2 class="section-title">User Signup Analytics</h2>
+      <div class="analytics-container">
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-user-plus"></i></div>
+            <div class="stat-value" id="total-signups">0</div>
+            <div class="stat-label">Total Signups</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+            <div class="stat-value" id="weekly-signups">0</div>
+            <div class="stat-label">This Week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+            <div class="stat-value" id="student-signups">0</div>
+            <div class="stat-label">Students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+            <div class="stat-value" id="staff-signups">0</div>
+            <div class="stat-label">Staff</div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="signupChart" height="300"></canvas>
+        </div>
+        
+        <div class="table-container">
+          <h3>Recent Signups</h3>
+          <table id="signup-activity-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Visits Section -->
+    <div id="analytics-visits" class="hidden">
+      <h2 class="section-title">Page Visit Analytics</h2>
+      <div class="analytics-container">
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-eye"></i></div>
+            <div class="stat-value" id="total-visits">0</div>
+            <div class="stat-label">Total Visits</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-value" id="unique-visitors">0</div>
+            <div class="stat-label">Unique Visitors</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-value" id="avg-duration">0m</div>
+            <div class="stat-label">Avg Duration</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="stat-value" id="popular-page">-</div>
+            <div class="stat-label">Most Popular</div>
+          </div>
+        </div>
+        
+        <div class="chart-container">
+          <canvas id="visitsChart" height="300"></canvas>
+        </div>
+        
+        <div class="table-container">
+          <h3>Top Pages</h3>
+          <table id="top-pages-table">
+            <thead>
+              <tr>
+                <th>Page</th>
+                <th>Visits</th>
+                <th>Unique Visitors</th>
+                <th>Avg Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Daily Section -->
+    <div id="reports-daily" class="hidden">
+      <h2 class="section-title">Daily Reports</h2>
+      <p>This section will show daily reports.</p>
+    </div>
+
+    <!-- Reports Weekly Section -->
+    <div id="reports-weekly" class="hidden">
+      <h2 class="section-title">Weekly Reports</h2>
+      <p>This section will show weekly reports.</p>
+    </div>
+
+    <!-- Reports Monthly Section -->
+    <div id="reports-monthly" class="hidden">
+      <h2 class="section-title">Monthly Reports</h2>
+      <p>This section will show monthly reports.</p>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="settings" class="hidden">
+      <h2 class="section-title">System Settings</h2>
+      <p>This section will contain system settings.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-column">
+      <h4>About Us</h4>
+      <p>Sa'adatu Rimi College of Education is committed to excellence in teaching, research, and community engagement.</p>
+    </div>
+    <div class="footer-column">
+      <h4>Contact</h4>
+      <p>Kano State, Nigeria<br>Email: info@src.edu.ng<br>Phone: +234 800 123 4567</p>
+    </div>
+    <div class="footer-column">
+      <h4>Quick Links</h4>
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Academics</a>
+      <a href="#">Admissions</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-column">
+      <h4>Follow Us</h4>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">
+    &copy; 2025 Sa'adatu Rimi College of Education. All rights reserved.
+  </div>
+</footer>
+
+<!-- Chart.js for Analytics -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Complete Updated JavaScript -->
+<script>
+  // Real B2Client Implementation
+  const B2Client = {
+    config: {
+      bucketName: 'goldinglibrary',
+      folderPaths: {
+        ebook: 'ebooks/',
+        user: 'users/',
+        journal: 'journals/',
+        projects: 'projects/',
+        internal_lectures: 'internal_lectures/',
+        external_lectures: 'external_lectures/',
+        research: 'research/',
+        community: 'community/'
+      }
+    },
+    
+    // Real upload function that calls your backend
+    uploadFile: async function(file, folder, metadata) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('metadata', JSON.stringify(metadata));
+      
+      try {
+        const response = await fetch(`/api/upload/${folder}`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        console.error('Upload error:', error);
+        throw error;
+      }
+    },
+    
+    // Real file fetching function
+    fetchFiles: async function(folder) {
+      try {
+        const response = await fetch(`/api/files/${folder}`);
+        if (!response.ok) {
+          throw new Error(`Fetch failed: ${response.statusText}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch error:', error);
+        return [];
+      }
+    },
+    
+    // Real delete function
+    deleteFile: async function(key) {
+      try {
+        const response = await fetch(`/api/file/${encodeURIComponent(key)}`, {
+          method: 'DELETE'
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Delete failed: ${response.statusText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Delete error:', error);
+        throw error;
+      }
+    }
+  };
+
+  // UI Navigation Functions
+  function showSection(id) {
+    document.querySelectorAll('.content > div').forEach(s => {
+      s.classList.add('hidden');
+      s.classList.remove('active-section');
+    });
+    const sec = document.getElementById(id);
+    if (sec) {
+      sec.classList.remove('hidden');
+      sec.classList.add('active-section');
+      if (['analytics-login','analytics-signup','analytics-visits'].includes(id)) {
+        initAnalyticsCharts();
+      }
+      if (id.startsWith('manage-')) {
+        loadManagementTable(id.replace('manage-', ''));
+      }
+    }
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+  }
+
+  function toggleDropdown(element) {
+    document.querySelectorAll('.dropdown').forEach(d => {
+      if (d !== element) d.classList.remove('open');
+    });
+    element.classList.toggle('open');
+  }
+
+  // Test backend connection
+  async function testBackendConnection() {
+    try {
+      const response = await fetch('/api/status');
+      if (response.ok) {
+        console.log('✅ Backend connection successful');
+        return true;
+      } else {
+        console.error('❌ Backend connection failed');
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Backend connection error:', error);
+      return false;
+    }
+  }
+
+  // Main Form Submission Handler
+  function submitForm(event, formType) {
+    event.preventDefault();
+    
+const folderMap = {
+  'ebooks': 'ebook',            // ← Change to match B2Client config
+  'users': 'users',              // ← Change to match B2Client config
+  'journals': 'journals',        // ← Change to match B2Client config
+  'projects': 'projects',
+  'internal_lectures': 'internal_lectures',
+  'external_lecture': 'external_lectures',
+  'research': 'research',
+  'community': 'community'
+};
+
+    const folderKey = folderMap[formType];
+    if (!folderKey) {
+      alert(`Invalid form type: ${formType}`);
+      return;
+    }
+
+    const formData = new FormData(event.target);
+    const data = {};
+    formData.forEach((value, key) => data[key] = value.trim());
+
+    // Handle External Lecture separately (URL only)
+    if (formType === 'external_lecture') {
+      return handleExternalLecture(data, event);
+    }
+
+    // Handle file uploads for all other types
+    const fileInput = Array.from(event.target.querySelectorAll('input[type="file"]'))
+      .find(input => input.files && input.files.length > 0);
+    
+    if (!fileInput || !fileInput.files[0]) {
+      alert("Please select a file to upload.");
+      return;
+    }
+
+    const file = fileInput.files[0];
+    const metadata = buildMetadata(formType, data);
+    
+    // Show progress UI
+    const progressBar = event.target.querySelector('.progress-bar');
+    const status = event.target.querySelector('.status-message');
+    
+    if (progressBar) {
+      progressBar.closest('.progress-container').classList.remove('hidden');
+      progressBar.style.width = '0%';
+    }
+
+    // REAL UPLOAD - This now calls your actual backend
+    B2Client.uploadFile(file, folderKey, metadata)
+      .then(result => {
+        if (progressBar) {
+          progressBar.closest('.progress-container').classList.add('hidden');
+        }
+        
+        if (status) {
+          status.innerHTML = `✅ Upload successful!<br>
+                             <strong>File:</strong> ${file.name}<br>
+                             <strong>Type:</strong> ${formType}`;
+          status.className = 'status-message success';
+          status.classList.remove('hidden');
+          
+          setTimeout(() => {
+            status.classList.add('hidden');
+            event.target.reset();
+          }, 5000);
+        }
+        
+        // Refresh the corresponding management table
+        refreshManagementTable(folderKey);
+        updateDashboardStats();
+      })
+      .catch(err => {
+        if (progressBar) {
+          progressBar.closest('.progress-container').classList.add('hidden');
+        }
+        
+        if (status) {
+          status.innerHTML = `❌ Upload failed: ${err.message}`;
+          status.className = 'status-message error';
+          status.classList.remove('hidden');
+        }
+        console.error('Upload error:', err);
+      });
+
+    // Simulate progress
+    simulateProgress(progressBar);
+  }
+
+  // Helper function for external lectures
+  function handleExternalLecture(data, event) {
+    const metadata = {
+      title: data.title || '',
+      speaker: data.speaker || '',
+      department: data.department || '',
+      url: data.url || '',
+      uploadedAt: new Date().toISOString()
+    };
+
+    // Create a fake file for external lectures (stores as JSON)
+    const jsonContent = JSON.stringify(metadata, null, 2);
+    const fakeFile = new File([jsonContent], `${data.title.replace(/[^a-zA-Z0-9]/g, '-')}.json`, {
+      type: 'application/json'
+    });
+
+    const status = event.target.querySelector('.status-message');
+    
+    B2Client.uploadFile(fakeFile, 'external_lectures', metadata)
+      .then(() => {
+        if (status) {
+          status.innerHTML = `✅ External lecture saved!<br>
+                             <strong>Title:</strong> ${data.title}`;
+          status.className = 'status-message success';
+          status.classList.remove('hidden');
+        }
+        event.target.reset();
+        refreshManagementTable('external_lectures');
+        updateDashboardStats();
+      })
+      .catch(err => {
+        if (status) {
+          status.innerHTML = `❌ Failed to save: ${err.message}`;
+          status.className = 'status-message error';
+          status.classList.remove('hidden');
+        }
+      });
+  }
+
+  // Build metadata based on form type
+  function buildMetadata(formType, data) {
+    const baseMetadata = {
+      uploadedAt: new Date().toISOString(),
+      uploadedBy: 'admin'
+    };
+
+    switch(formType) {
+      case 'ebook':
+        return {
+          ...baseMetadata,
+          title: data.title || '',
+          author: data.author || '',
+          department: data.department || '',
+          description: data.description || '',
+          isbn: data.issn || '',
+          category: 'ebook'
+        };
+        
+      case 'user':
+        return {
+          ...baseMetadata,
+          name: data.name || '',
+          email: data.email || '',
+          phone: data.number || '',
+          role: data.role || '',
+          department: data.department || '',
+          idNumber: data.id || '',
+          category: 'user'
+        };
+        
+      case 'journal':
+        return {
+          ...baseMetadata,
+          title: data.title || '',
+          author: data.author || '',
+          institution: data.institution || '',
+          volume_issue: data.volume_issue || '',
+          year: data.year || '',
+          department: data.department || '',
+          abstract: data.abstract || '',
+          category: 'journal'
+        };
+        
+      case 'projects':
+        return {
+          ...baseMetadata,
+          title: data.title || '',
+          author: data.student_name || '',
+          studentId: data.student_id || '',
+          supervisor: data.supervisor || '',
+          department: data.department || '',
+          abstract: data.abstract || '',
+          category: 'project'
+        };
+        
+      case 'internal_lectures':
+        return {
+          ...baseMetadata,
+          title: data.title || '',
+          speaker: data.instructor || '',
+          author: data.instructor || '',
+          department: data.department || '',
+          abstract: data.description || '',
+          category: 'internal_lecture'
+        };
+        
+      case 'community':
+        return {
+          ...baseMetadata,
+          title: data.title || '',
+          contributor: data.contributor || '',
+          department: data.department || 'General',
+          abstract: data.description || '',
+          contentType: data.content_type || '',
+          category: 'community'
+        };
+
+      case 'research':
+        return {
+          ...baseMetadata,
+          title: data.title || '',
+          author: data.author || '',
+          supervisor: data.supervisor || '',
+          department: data.department || '',
+          degreeLevel: data.degree_level || '',
+          year: data.year || '',
+          abstract: data.abstract || '',
+          keywords: data.keywords || '',
+          category: 'research'
+        };
+        
+      default:
+        return {
+          ...baseMetadata,
+          title: data.title || '',
+          author: data.author || '',
+          department: data.department || '',
+          category: formType
+        };
+    }
+  }
+
+  // Progress simulation
+  function simulateProgress(progressBar) {
+    if (!progressBar) return;
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress >= 90) {
+        clearInterval(interval);
+        return;
+      }
+      progressBar.style.width = progress + '%';
+      progressBar.textContent = Math.round(progress) + '%';
+    }, 300);
+  }
+
+  // Table Management Functions
+  function refreshManagementTable(folderKey) {
+    const tableMap = {
+      'ebooks': 'ebook-table',
+      'users': 'user-table', 
+      'journals': 'journal-table',
+      'projects': 'project-table',
+      'internal_lectures': 'internal-lecture-table',
+      'external_lectures': 'external-lecture-table',
+      'research': 'research-table',
+      'community': 'community-table'
+    };
+
+    const tableId = tableMap[folderKey];
+    if (tableId && document.getElementById(tableId)) {
+      fetchS3Files(B2Client.config.folderPaths[folderKey], (files) => {
+        populateTable(tableId, files, folderKey.replace(/s$/, ''));
+      });
+    }
+  }
+
+  function loadManagementTable(section) {
+    const tableMap = {
+      'ebook': 'ebook-table',
+      'users': 'user-table',
+      'journal': 'journal-table',
+      'projects': 'project-table',
+      'Internal-lectures': 'internal-lecture-table',
+      'External-lectures': 'external-lecture-table',
+      'research': 'research-table',
+      'community': 'community-table'
+    };
+
+    const tableId = tableMap[section];
+    const folderKey = Object.keys(B2Client.config.folderPaths).find(key => 
+      key.replace('_', '-') === section.toLowerCase()
+    ) || section;
+
+    if (tableId) {
+      fetchS3Files(B2Client.config.folderPaths[folderKey] || B2Client.config.folderPaths[section], (files) => {
+        populateTable(tableId, files, section);
+      });
+    }
+  }
+
+  async function fetchS3Files(folderPath, callback) {
+    try {
+      if (!folderPath || folderPath === 'undefined') {
+        callback([]);
+        return;
+      }
+      const clean = folderPath.replace(/\/$/, '');
+      const files = await B2Client.fetchFiles(clean);
+      callback(files);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      callback([]);
+    }
+  }
+
+  function getFileIcon(name) {
+    if (/\.(jpg|jpeg|png)$/i.test(name)) return `<i class="fas fa-file-image"></i>`;
+    if (/\.pdf$/i.test(name)) return `<i class="fas fa-file-pdf"></i>`;
+    if (/\.docx?$/i.test(name)) return `<i class="fas fa-file-word"></i>`;
+    if (/\.json$/i.test(name)) return `<i class="fas fa-file-code"></i>`;
+    if (/\.(mp4|avi|mov|wmv)$/i.test(name)) return `<i class="fas fa-file-video"></i>`;
+    return `<i class="fas fa-file"></i>`;
+  }
+
+  function populateTable(tableId, files, category) {
+    const tbody = document.querySelector(`#${tableId} tbody`);
+    tbody.innerHTML = "";
+    if (!files || files.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">No files found</td></tr>`;
+      return;
+    }
+
+    files.forEach(file => {
+      const name = file.name || file.key?.split('/').pop() || 'Unknown';
+      const title = file.title || name.replace(/\.[^/.]+$/, '');
+      const author = file.author || file.speaker || file.contributor || file.student_name || 'Unknown';
+      const dept = file.department || 'General';
+      const size = file.displaySize || 'N/A';
+      const date = file.displayDate || 'N/A';
+
+      let cols = "";
+      switch(category) {
+        case 'ebook':
+          cols = `
+            <td>${truncateText(title)}</td>
+            <td>${truncateText(author)}</td>
+            <td>${truncateText(dept)}</td>
+            <td>${getFileIcon(name)}</td>
+            <td>${date}</td>
+            <td>${size}</td>
+          `;
+          break;
+        case 'journal':
+          cols = `
+            <td>${truncateText(title)}</td>
+            <td>${truncateText(author)}</td>
+            <td>${truncateText(file.volume_issue || file.issueVolume || 'N/A')}</td>
+            <td>${file.year || 'N/A'}</td>
+            <td>${getFileIcon(name)}</td>
+            <td>${size}</td>
+          `;
+          break;
+        case 'internal_lecture':
+        case 'Internal-lectures':
+          cols = `
+            <td>${truncateText(title)}</td>
+            <td>${truncateText(author)}</td>
+            <td>${truncateText(dept)}</td>
+            <td>${getFileIcon(name)}</td>
+            <td>${date}</td>
+          `;
+          break;
+        case 'external_lecture':
+        case 'External-lectures':
+          cols = `
+            <td>${truncateText(title)}</td>
+            <td>${truncateText(file.speaker || author)}</td>
+            <td>${truncateText(dept)}</td>
+            <td>${getFileIcon(name)}</td>
+            <td>${date}</td>
+          `;
+          break;
+        case 'community':
+          cols = `
+            <td>${truncateText(title)}</td>
+            <td>${truncateText(file.contributor || author)}</td>
+            <td>${truncateText(dept)}</td>
+            <td>${getFileIcon(name)}</td>
+            <td>${date}</td>
+          `;
+          break;
+        case 'project':
+        case 'projects':
+          cols = `
+            <td>${truncateText(title)}</td>
+            <td>${truncateText(file.studentId || 'N/A')}</td>
+            <td>${truncateText(file.supervisor || 'N/A')}</td>
+            <td>${truncateText(dept)}</td>
+            <td>${getFileIcon(name)}</td>
+            <td>${size}</td>
+          `;
+          break;
+        case 'research':
+          cols = `
+            <td>${truncateText(title)}</td>
+            <td>${truncateText(author)}</td>
+            <td>${truncateText(file.supervisor || 'N/A')}</td>
+            <td>${truncateText(dept)}</td>
+            <td>${getFileIcon(name)}</td>
+            <td>${size}</td>
+          `;
+          break;
+        case 'user':
+        case 'users':
+          cols = `
+            <td>${truncateText(file.name || title)}</td>
+            <td>${file.phone || 'N/A'}</td>
+            <td>${file.idNumber || file.studentId || 'N/A'}</td>
+            <td>${file.role || 'N/A'}</td>
+            <td>${truncateText(dept)}</td>
+          `;
+          break;
+        default:
+          cols = `<td>${name}</td><td>${date}</td><td>${size}</td>`;
+      }
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td><input type="checkbox" class="select-row"></td>
+        ${cols}
+        <td class="actions">
+          <button class="btn-edit" onclick="editRecord(this)">Edit</button>
+          <button class="btn-delete" onclick="deleteRecord(this, '${file.key}')">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function truncateText(text, maxLength = 50) {
+    if (!text) return 'N/A';
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+  }
+
+  // Update dashboard statistics
+  async function updateDashboardStats() {
+    try {
+      const counts = {
+        ebook: 0,
+        user: 0,
+        research: 0,
+        project: 0
+      };
+
+      // Fetch counts for each category
+      for (const [key, path] of Object.entries(B2Client.config.folderPaths)) {
+        if (['ebook', 'user', 'research', 'projects'].includes(key)) {
+          const files = await B2Client.fetchFiles(path.replace(/\/$/, ''));
+          counts[key] = files.length;
+        }
+      }
+
+      // Update the dashboard
+      document.getElementById('ebook-count').textContent = counts.ebook;
+      document.getElementById('user-count').textContent = counts.user;
+      document.getElementById('research-count').textContent = counts.research;
+      document.getElementById('project-count').textContent = counts.project;
+    } catch (error) {
+      console.error('Error updating dashboard stats:', error);
+    }
+  }
+
+  // Record management functions
+  window.editRecord = (btn) => {
+    alert("Edit functionality: implement metadata update via PUT /api/file/:key/metadata");
+  };
+
+  window.deleteRecord = async (btn, key) => {
+    if (confirm("Are you sure you want to delete this record?")) {
+      try {
+        await B2Client.deleteFile(key);
+        btn.closest("tr").remove();
+        updateDashboardStats();
+      } catch (error) {
+        alert("Delete failed: " + error.message);
+      }
+    }
+  };
+
+  window.toggleAll = (cb) => {
+    document.querySelectorAll('.select-row').forEach(c => c.checked = cb.checked);
+  };
+
+  window.filterTable = (id, q) => {
+    const rows = document.getElementById(id).tBodies[0].rows;
+    for (let r of rows) {
+      const match = Array.from(r.cells).slice(1, -1).some(c => 
+        c.innerText.toLowerCase().includes(q.toLowerCase())
+      );
+      r.style.display = match ? "" : "none";
+    }
+  };
+
+  window.saveChanges = function() {
+    alert("Changes saved locally. Implement backend update logic.");
+  };
+
+  // Analytics Charts
+  function initAnalyticsCharts() {
+    // Login Chart
+    const loginCtx = document.getElementById('loginChart')?.getContext('2d');
+    if (loginCtx) {
+      new Chart(loginCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          datasets: [{
+            label: 'Daily Logins',
+            data: [120, 190, 170, 220, 180, 210, 240],
+            borderColor: '#006400',
+            backgroundColor: 'rgba(0, 100, 0, 0.1)',
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'Login Activity (Last 7 Months)' }
+          }
+        }
+      });
+    }
+
+    // Signup Chart
+    const signupCtx = document.getElementById('signupChart')?.getContext('2d');
+    if (signupCtx) {
+      new Chart(signupCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Students', 'Staff', 'Faculty', 'Admin', 'Visitors'],
+          datasets: [{
+            label: 'Signups by Role',
+            data: [320, 45, 28, 12, 15],
+            backgroundColor: [
+              'rgba(0, 100, 0, 0.7)',
+              'rgba(0, 80, 0, 0.7)',
+              'rgba(0, 120, 0, 0.7)',
+              'rgba(0, 60, 0, 0.7)',
+              'rgba(0, 140, 0, 0.7)'
+            ],
+            borderColor: [
+              'rgba(0, 100, 0, 1)',
+              'rgba(0, 80, 0, 1)',
+              'rgba(0, 120, 0, 1)',
+              'rgba(0, 60, 0, 1)',
+              'rgba(0, 140, 0, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'User Signups by Role' }
+          }
+        }
+      });
+    }
+
+    // Visits Chart
+    const visitsCtx = document.getElementById('visitsChart')?.getContext('2d');
+    if (visitsCtx) {
+      new Chart(visitsCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['eBooks', 'Journals', 'Lectures', 'Research', 'Projects', 'Community'],
+          datasets: [{
+            data: [300, 50, 100, 80, 60, 40],
+            backgroundColor: [
+              'rgba(0, 100, 0, 0.7)',
+              'rgba(0, 80, 0, 0.7)',
+              'rgba(0, 120, 0, 0.7)',
+              'rgba(0, 60, 0, 0.7)',
+              'rgba(0, 140, 0, 0.7)',
+              'rgba(0, 160, 0, 0.7)'
+            ],
+            borderColor: [
+              'rgba(0, 100, 0, 1)',
+              'rgba(0, 80, 0, 1)',
+              'rgba(0, 120, 0, 1)',
+              'rgba(0, 60, 0, 1)',
+              'rgba(0, 140, 0, 1)',
+              'rgba(0, 160, 0, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'right' },
+            title: { display: true, text: 'Page Visits by Content Type' }
+          }
+        }
+      });
+    }
+
+    // Populate analytics data
+    document.getElementById('login-count').textContent = '1,245';
+    document.getElementById('active-users').textContent = '856';
+    document.getElementById('avg-session').textContent = '12m';
+    document.getElementById('today-logins').textContent = '42';
+    document.getElementById('total-signups').textContent = '420';
+    document.getElementById('weekly-signups').textContent = '28';
+    document.getElementById('student-signups').textContent = '320';
+    document.getElementById('staff-signups').textContent = '45';
+    document.getElementById('total-visits').textContent = '5,678';
+    document.getElementById('unique-visitors').textContent = '2,345';
+    document.getElementById('avg-duration').textContent = '8m';
+    document.getElementById('popular-page').textContent = 'eBooks';
+  }
+
+  // File preview and UI handlers
+  document.addEventListener('change', function(e) {
+    if (e.target && e.target.type === 'file') {
+      const fileNameDiv = e.target.parentElement.nextElementSibling ||
+                          e.target.nextSibling?.closest('.file-name');
+      if (fileNameDiv) {
+        fileNameDiv.textContent = e.target.files[0]?.name || 'No file selected';
+      }
+    }
+  });
+
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.name === 'url') {
+      const url = e.target.value;
+      const iframe = e.target.closest('form').querySelector('.video-preview-external');
+      if (!iframe) return;
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        let videoId = url.split(/v=|youtu.be\//)[1]?.split(/[&?]/)[0];
+        iframe.src = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
+      } else if (url.includes('vimeo.com')) {
+        const videoId = url.split('/').pop();
+        iframe.src = videoId ? `https://player.vimeo.com/video/${videoId}` : '';
+      } else {
+        iframe.src = '';
+      }
+    }
+  });
+
+  // Initialize the application
+  document.addEventListener('DOMContentLoaded', function() {
+    showSection('dashboard');
+    testBackendConnection();
+    updateDashboardStats();
+    
+    // Load all management tables in background
+    setTimeout(() => {
+      Object.keys(B2Client.config.folderPaths).forEach(folder => {
+        refreshManagementTable(folder);
+      });
+    }, 1000);
+  });
+</script>
+
+</body>
+</html>
